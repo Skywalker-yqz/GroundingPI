@@ -1,0 +1,52 @@
+# VlmSystem: a vision-language backbone as the sole perception stream, coupled to
+# the same fixed 16-block Action Expert the video path uses.
+#
+# The point of this config is comparability, not capability: run
+# `model=vlm_system` and `model=dual_system model.architecture.variant=fixed16_pi_layerwise`
+# on the same data and the ONLY difference is which backbone's hidden states the
+# Action Expert reads. The Action Expert itself is byte-identical (pinned in code,
+# verified by tests/test_vlm_system_fixed16_pi.py).
+#
+# There is no video stream here: no VAE, no T5, no video loss, no `generate`.
+# Inference goes through `architecture.predict_action_chunk(**pipeline_inputs)`.
+
+defaults:
+  # NOTE the deliberate absence of a `video_backbone` entry. `resolve_architecture_config`
+  # injects params["video_backbone"] whenever `model.video_backbone` exists, which
+  # would make BaseWAMArchitecture build a real video DiT that nothing reads —
+  # the architecture hard-raises if that happens.
+  - vlm_backbone: qwen3_vl_4b        # CLI: model/vlm_backbone=paligemma_3b | rex_omni_3b | locate_anything_3b | rynnbrain_2b
+  - action_backbone: fixed16_pi_action_dit
+  - _self_
+
+# No freeze: the VLM co-trains with the action expert, mirroring the video path
+# (dual_system_fixed16.yaml likewise leaves its DiT trainable). Consequences:
+#   * `extract_layerwise_features` runs inside the training forward, so the whole
+#     Qwen activation stack is retained — budget memory accordingly.
+#   * The trained VLM weights ARE written into the safetensors checkpoint
+#     (`save_checkpoint` only excludes `vlm_backbone.*` when the VLM is frozen),
+#     so nothing is silently discarded.
+#   * Set `training.vlm_lr` — the base LR (1e-4) is usually far too high for a
+#     pretrained VLM. Use the same value as `training.video_lr` so the two
+#     backbones are adapted on equal terms.
+# For the frozen-backbone protocol (report §9.4) instead, add
+# `freeze: [vlm_backbone.vlm_model]` here AND set
+# `model.action_backbone.detach_backbone_features=true` — both, or the first
+# forward refuses the run.
+
+architecture:
+  framework: vlm_system
+  variant: fixed16_pi_layerwise
+
+  # Keep identical to the video runs being compared against.
+  action_dim: 80          # unified cross-robot action space (unify_action=true)
+  use_proprioception: true
+  state_dim: 80
+
+  # Only consulted when no VLM backbone is attached (CPU tests). In production
+  # both come from the loaded checkpoint's text_config.
+  # vlm_dim: null
+  # num_vlm_layers: null
+
+# Set `training.lambda_video=0`: this architecture does not train a video stream
+# and warns on every step otherwise.

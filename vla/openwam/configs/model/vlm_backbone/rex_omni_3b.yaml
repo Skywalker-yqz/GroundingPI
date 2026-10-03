@@ -1,0 +1,12 @@
+# Rex-Omni understanding backbone (cfg.model.vlm_backbone.*).
+# Geometry is read from the checkpoint at load time, so the Fixed-16 pi-style
+# depth taps place themselves: 36 blocks / hidden 2048 -> taps 0, 5, 10, 15, 20, 25, 30, 35,
+# and a 2,098,176-parameter width projector.
+name: qwen2_5_vl
+checkpoint_path: /path/to/backbones/VLM/Rex-Omni-3B  # [Required]
+load_pretrained: true   # false = random-init (ablations / CPU smoke tests)
+max_length: 512         # processor max text length; longer inputs truncated
+
+# Rex-Omni keeps the Qwen2.5-VL architecture unchanged; it re-purposes the final
+# 1000 vocabulary entries as quantised coordinate tokens. Nothing structural
+# differs, so the shared qwen2_5_vl wrapper loads it as-is.

@@ -1,0 +1,40 @@
+# Cosmos-Predict2.5 2B video backbone for the video side of the Fixed-16
+# comparison (dual_system_fixed16). Fields land in cfg.model.video_backbone.*;
+# switch backbone on the CLI: model/video_backbone=cosmos_predict25.
+# DiT geometry is auto-derived (28 blocks, hidden 2048, context_dim=1024), so the
+# Fixed-16 depth taps place themselves: 0, 4, 8, 12, 15, 19, 23, 27.
+#
+# Freeze policy lives in the model freeze list (dual_system_fixed16.yaml pins
+# video_backbone.vae + video_backbone.reason1; the DiT `dit` is TRAINABLE by
+# default). Don't add a `freeze:` knob here — add `video_backbone.dit` to the
+# freeze list in an override instead.
+
+name: cosmos_predict25_2b
+# Bundle root; build_cosmos_predict25_pipeline globs <model_variant>/<uuid>_ema_bf16.pt.
+model_path: /path/to/backbones/WAM/Cosmos-Predict2.5-2B
+model_variant: base/post-trained   # base/{pre,post}-trained | base/distilled | auto/multiview | robot/multiview-agibot | robot/action-cond
+
+# Cosmos-Reason1-7B bundle root, run inline as the live text encoder (required
+# on the training path). Checkpoints save Reason1 into safetensors + copy
+# structural files under <ckpt_dir>/reason1/, so deploy needs no external path.
+text_encoder_path: /path/to/backbones/WAM/Cosmos-Reason1-7B
+
+# CFG dropout: substitutes "" for prompts with prob p, only when training=True.
+# text_encoder_dropout_seed defaults to null (nondeterministic); set an int for
+# reproducibility via +model.video_backbone.text_encoder_dropout_seed=<int>.
+text_encoder_dropout: 0.0
+
+vae: wan2pt1                                        # wan2pt1 (Cosmos-Predict2.5 tokenizer; stride 4×8×8, z_dim=16) | none (caller supplies latents)
+
+# Matches upstream rectified-flow shift=5; training target/noising identical to Wan.
+# Named shift_video to match the Wan backbone's video-scheduler shift knob.
+shift_video: 5.0
+
+# sac_mode (default: none) = Cosmos SAC selective activation checkpointing,
+# applied to the DiT blocks after weight load. Trades compute for VRAM. The key
+# is omitted here (defaults to none); set via the `+` append form, e.g.
+# +model.video_backbone.sac_mode=mm_only:
+#   none       = raw, keep all activations (fastest, most VRAM)
+#   mm_only    = recompute non-matmul/attn ops at backward, keep the expensive
+#                matmul/attention outputs (memory/compute sweet spot)
+#   block_wise = recompute the whole block (max VRAM savings, most recompute)

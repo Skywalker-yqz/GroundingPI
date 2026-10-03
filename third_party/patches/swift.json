@@ -1,0 +1,282 @@
+{
+  "schema_version": 1,
+  "scope": "selected-source-export",
+  "base": {
+    "repository": "https://github.com/modelscope/ms-swift",
+    "ref": "v4.1.3",
+    "commit": "c6875ef6a962e83f01138bb239b5fb4e5e55b37f",
+    "archive_url": "https://codeload.github.com/modelscope/ms-swift/tar.gz/c6875ef6a962e83f01138bb239b5fb4e5e55b37f",
+    "archive_sha256": "27d944c8215def40c60708df8c287cc66069125a2caade9f95a9fd7daea9a378",
+    "relationship": "public comparison base; exact ancestry is not asserted"
+  },
+  "source_prefix": "",
+  "path_overrides": {
+    "LICENSE": "LICENSE"
+  },
+  "operations": {
+    "MANIFEST.in": {
+      "op": "replace",
+      "base_sha256": "4e7c9009e51d84f5c8441d9e5e05a5bc3937da26f0cf0dba1139392cc4779ca7"
+    },
+    "NOTICE.release": {
+      "op": "add"
+    },
+    "README.md": {
+      "op": "replace",
+      "base_sha256": "8bc499f1a42e8314eb1e311e098797962c78155dfed4bbb0a1521913b2c3e99a"
+    },
+    "requirements/framework.txt": {
+      "op": "replace",
+      "base_sha256": "7a9846c6d5125dc44521e95cfb459cbccddee83be88afb366e4402e8400b3378"
+    },
+    "setup.cfg": {
+      "op": "replace",
+      "base_sha256": "9a13bf2d2d5a794da48d4aa0b6294b7736379323d529c91d1b4a27f393174a6c"
+    },
+    "setup.py": {
+      "op": "replace",
+      "base_sha256": "90cb79f89292b98efa96ab24e4234c69a8adfdb61a2363b8eca1f7a257ca727f"
+    },
+    "swift/arguments/sft_args.py": {
+      "op": "replace",
+      "base_sha256": "383fdaa79126e75f1fc47fbdb8f19bce2f1db48a9e66ab40d1194c5cdd49e536"
+    },
+    "swift/arguments/tuner_args.py": {
+      "op": "replace",
+      "base_sha256": "1e5a55d8c4f51a7a60b7ac2b523c0593bc29cb58faa7269dcbc5e628448e89b2"
+    },
+    "swift/callbacks/activation_cpu_offload.py": {
+      "op": "replace",
+      "base_sha256": "677b5b715829e26bb6d050c993fa5cda2b0f9735d444aec2baf0a638f3787c32"
+    },
+    "swift/callbacks/clear_optimizer_state.py": {
+      "op": "add"
+    },
+    "swift/callbacks/mapping.py": {
+      "op": "replace",
+      "base_sha256": "6ccad9a4e04defae30e36b54d138c6e2335256d69cb2b1c1ab60c23024c27553"
+    },
+    "swift/cli/sft_nvtxoff.py": {
+      "op": "add"
+    },
+    "swift/config/zero3_small_bucket_q35_9b_8192.json": {
+      "op": "add"
+    },
+    "swift/dataset/__init__.py": {
+      "op": "replace",
+      "base_sha256": "eed970bdbea1c718473715ccf26a18540d27c668242b73604728721836dc26b4"
+    },
+    "swift/dataset/dataset_meta.py": {
+      "op": "replace",
+      "base_sha256": "e0869a4b370b377585afb801cd5e4121d5ad137cb34ca6c36971bc5b5dad2d7e"
+    },
+    "swift/dataset/loader.py": {
+      "op": "replace",
+      "base_sha256": "205ed60d053c698bdc8140753247c15ceddee9dc54d47cc0ac575a5ad8450277"
+    },
+    "swift/dataset/packing.py": {
+      "op": "replace",
+      "base_sha256": "f873186b6841170804f76ef64320b223838179e7b63ec24222858ff08ee85548"
+    },
+    "swift/dataset/preprocessor/core.py": {
+      "op": "replace",
+      "base_sha256": "65317b144fa3ac497ff2fa4b61427d178ba00529b6761ec98114049863a3a7b4"
+    },
+    "swift/dataset/profile_utils.py": {
+      "op": "add"
+    },
+    "swift/dataset/utils.py": {
+      "op": "replace",
+      "base_sha256": "82ef4b3c78a2ae3be8dcc0e8caee2dde7215f8f877bfd40a99d39f3e9586d252"
+    },
+    "swift/infer_engine/vllm_engine.py": {
+      "op": "replace",
+      "base_sha256": "8aa8da29ae7fdb9f0498fd3dead3dae80401499bce8cc11c01c2fb25fb465cb3"
+    },
+    "swift/loss_scale/base.py": {
+      "op": "replace",
+      "base_sha256": "9ef6c3dc161ad6a8bea9a7e2024e67918f80b01ec7ff49bc76ba0fa0c373a923"
+    },
+    "swift/megatron/arguments/megatron_args.py": {
+      "op": "replace",
+      "base_sha256": "34065a503054f71975a00a7cefe5916610cffc4313f9e053d5881b81214bc295"
+    },
+    "swift/megatron/callbacks/wandb.py": {
+      "op": "replace",
+      "base_sha256": "bfd0cdcd015fb5fda879500ba52193fb319696382d689902073fd863f3095b07"
+    },
+    "swift/megatron/init.py": {
+      "op": "replace",
+      "base_sha256": "85a73fcb835c4db18b5c148048157e16d36c56660c6251be177f992fe0728e38"
+    },
+    "swift/megatron/pipelines/train/sft.py": {
+      "op": "replace",
+      "base_sha256": "02e7ce84a9dd321c51105511e576036f98850654a203b139fa96f2c1e6c7d4fb"
+    },
+    "swift/megatron/trainers/base.py": {
+      "op": "replace",
+      "base_sha256": "81c6f0a85ac9d90568391465c4fd3bb2bcdca2e30425fc5693e487bc03c3ef9f"
+    },
+    "swift/megatron/trainers/batch_sampler.py": {
+      "op": "replace",
+      "base_sha256": "b46f8cc1371c8d2c3ae90368f0dfa08bea5b835e06ca2e867d58939c818f79d3"
+    },
+    "swift/megatron/trainers/gkd_trainer.py": {
+      "op": "replace",
+      "base_sha256": "b63d3c641cfe5931018af751b04dee80ece2b0ae63e930815204a321a15d6541"
+    },
+    "swift/megatron/trainers/rollout_mixin.py": {
+      "op": "replace",
+      "base_sha256": "f4cdca9bfa2fa05da3403f4c45d687e73cadc740114fc41354f21a0981d8e9a4"
+    },
+    "swift/megatron/utils/megatron_lm_utils.py": {
+      "op": "replace",
+      "base_sha256": "65fc0cf66a0a3bff8fc8b4f1dd494b413c0334420592575deb62799e53b103c7"
+    },
+    "swift/model/constant.py": {
+      "op": "replace",
+      "base_sha256": "27fd31faf6ff1bce378722d03ab13b347843d6c2ce313cd2c568649bb93047e1"
+    },
+    "swift/model/model_arch.py": {
+      "op": "replace",
+      "base_sha256": "96c5b027b3c237258abe439321293f525d8be0b06e45badc3aeb561db68765c0"
+    },
+    "swift/model/models/qwen.py": {
+      "op": "replace",
+      "base_sha256": "8cd7e8530dba6b48059895a1f840fd6c47d97aee34c77a6d9f0e3a31365e0313"
+    },
+    "swift/model/npu_patcher.py": {
+      "op": "replace",
+      "base_sha256": "f64bfc87dcac0e0203dd08af72d84629ce94064cfd6f5aa4b6a5d72966424186"
+    },
+    "swift/optimizers/base.py": {
+      "op": "replace",
+      "base_sha256": "53dc01f8e78ad1d82fd9ebfadb4f37c89839123afa0455fa496dfeee03aaea2d"
+    },
+    "swift/optimizers/embedding_lr.py": {
+      "op": "add"
+    },
+    "swift/optimizers/mapping.py": {
+      "op": "replace",
+      "base_sha256": "0c3a0dad825a7f62b48822582fb19bb7b72315471d0964278165eac828a763f4"
+    },
+    "swift/optimizers/multimodal.py": {
+      "op": "replace",
+      "base_sha256": "728db37e741cb5788710af68cae1f1aa6e7584cc59fb89390153678b0212ba24"
+    },
+    "swift/pipelines/export/cached_dataset.py": {
+      "op": "replace",
+      "base_sha256": "53bc638483ccbabdceede2b712c65733171c5c28854009045cb675c58709c44e"
+    },
+    "swift/pipelines/export/merge_lora.py": {
+      "op": "replace",
+      "base_sha256": "c766e47fbbbbc2480140e949a9de6829ee83b9d60b046260daf33fe560477d60"
+    },
+    "swift/pipelines/export/quant.py": {
+      "op": "replace",
+      "base_sha256": "cd004834ae3f08ea9392a8466b79df1f9b5a0f3d55146dabb8c0782bf0654f7b"
+    },
+    "swift/pipelines/infer/rollout.py": {
+      "op": "replace",
+      "base_sha256": "9f10c28dfd20465e843ea0953ba25f15b8e92e56e8902d1540e8f71c061498c1"
+    },
+    "swift/pipelines/train/sft.py": {
+      "op": "replace",
+      "base_sha256": "547c4aec461a9bfd0cea1953578f5748946597fc3b9d993af3c2de6fd68b0734"
+    },
+    "swift/pipelines/train/tuner.py": {
+      "op": "replace",
+      "base_sha256": "eaccb40ba11e132d647022d940ab6f396a36ac3227640be536fb0510a9e89fe8"
+    },
+    "swift/pipelines/utils.py": {
+      "op": "replace",
+      "base_sha256": "1590c07528b043d301b0d50f957cda8ed89009742783114a68b5f72d15f503d1"
+    },
+    "swift/rlhf_trainers/gkd_trainer.py": {
+      "op": "replace",
+      "base_sha256": "873993da698818b7c5ec34f4dbe96ed18a584a9db86854e7214e0dd9ebc60362"
+    },
+    "swift/rlhf_trainers/grpo_trainer.py": {
+      "op": "replace",
+      "base_sha256": "5c66661bd454cf65371ca0f78161857407e7a5988d2c1cfba86047c37a077e23"
+    },
+    "swift/rlhf_trainers/rollout_mixin.py": {
+      "op": "replace",
+      "base_sha256": "336df174bdca9f2d493cfcf409c31e5573c49be7b88f3e93697032cb0e4e9cdd"
+    },
+    "swift/rlhf_trainers/vllm_client.py": {
+      "op": "replace",
+      "base_sha256": "bff50b6926fb6c081e577c2e5d9db6c00702996b157c495bea53f130130ba2ae"
+    },
+    "swift/sequence_parallel/ulysses.py": {
+      "op": "replace",
+      "base_sha256": "33283a6409b7af0a0d73203058b2630f3f0a63aaaa9a4990e3fbee3089a81947"
+    },
+    "swift/template/base.py": {
+      "op": "replace",
+      "base_sha256": "d138b83861e61f57f0f9e7243e73ba35bd1e8dccb987ff7253c1da9560072307"
+    },
+    "swift/template/constant.py": {
+      "op": "replace",
+      "base_sha256": "dc6d3bcb5dc0a8ea5e7aaac6ff6d8197880d26fc61124ddf875d89905efb758f"
+    },
+    "swift/template/templates/gemma.py": {
+      "op": "replace",
+      "base_sha256": "2d04c2c44a6fa80b845b4f02a46ff111ff65eb2063bf89551d5322ba6c9708cb"
+    },
+    "swift/template/templates/qwen.py": {
+      "op": "replace",
+      "base_sha256": "142694ca1d8eb754b587a37292f823809da88a766ff07346e0918ea6810980ad"
+    },
+    "swift/template/vision_utils.py": {
+      "op": "replace",
+      "base_sha256": "df817e5a0eb5aa296040bba70edd8cc0574a97024dc685fdea96aab7ddcab8c0"
+    },
+    "swift/trainers/arguments.py": {
+      "op": "replace",
+      "base_sha256": "ff3651d732e124c14dea960c957781531134f935f56bc510eaa5d0e1540f3543"
+    },
+    "swift/trainers/mixin.py": {
+      "op": "replace",
+      "base_sha256": "d3b47f99b3b658640ffeadc33d843c1c8edbfeb8930c9f83234de34951d85bde"
+    },
+    "swift/trainers/seq2seq_trainer.py": {
+      "op": "replace",
+      "base_sha256": "f9d804c2db0591b9428baab439025dca4db55591c72f8ae5bc7f49b95f1c39eb"
+    },
+    "swift/trainers/utils.py": {
+      "op": "replace",
+      "base_sha256": "bde0004b86215e2ea8517f8fddb9c381e185ffa792668ecde355f03b7c30c4a3"
+    },
+    "swift/utils/__init__.py": {
+      "op": "replace",
+      "base_sha256": "e437956c069debbe51a9d683a0b97381ec90c63278f1dc486f15c636c150c6ff"
+    },
+    "swift/utils/hf_config.py": {
+      "op": "replace",
+      "base_sha256": "93913b19e7cc8293ae091d49793d73f6b880a4bc80e246e1e090c34f9cf9d4c3"
+    },
+    "swift/utils/import_utils.py": {
+      "op": "replace",
+      "base_sha256": "4ff5e29bd01b0ddb5bf5485bb6fa26a2a31494adf8630e4a9aaa0049df29c67c"
+    },
+    "swift/utils/torch_utils.py": {
+      "op": "replace",
+      "base_sha256": "f14e3331776fc17317e42c1db460260c0f4b61e553a9babd314ff03322d2e276"
+    },
+    "swift/utils/transformers_utils.py": {
+      "op": "replace",
+      "base_sha256": "7a80a6b819177028ac1e277121ea6474d8d03b96d1d327bf9166e64801cd1897"
+    },
+    "swift/utils/utils.py": {
+      "op": "replace",
+      "base_sha256": "ffd039aca2a04613f62a971675c731a2d4ddb44ff0bb6fa9e70a6040abdfaf41"
+    },
+    "swift/version.py": {
+      "op": "replace",
+      "base_sha256": "9e11457aed9626e679badda8e2826c8cbaba205d298dc2fcaee9040d5cdbe394"
+    }
+  },
+  "replacement_source": "third_party/swift.tar.gz",
+  "selection": "manifest dependencies entry files; unselected upstream files are omitted"
+}

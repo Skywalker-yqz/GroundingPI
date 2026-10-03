@@ -1,0 +1,15 @@
+# RynnBrain-2B understanding backbone (cfg.model.vlm_backbone.*).
+#
+# Alibaba DAMO Academy, fine-tuned from Qwen3-VL-2B-Instruct. Geometry is read
+# from the checkpoint at load time, so the Fixed-16 pi-style depth taps place
+# themselves: 28 blocks / hidden 2048 -> taps 0, 4, 8, 12, 15, 19, 23, 27,
+# with a 2,098,176-parameter width projector (1024 * 2048 + 1024).
+#
+# This checkpoint declares Qwen3VLForConditionalGeneration and runs in the same
+# transformers 4.57 environment as the other Qwen3-VL backbones. The named
+# `rynnbrain` wrapper is a thin alias over Qwen3VLBackbone so launch commands and
+# experiment output keep the model-family name without duplicating model logic.
+name: rynnbrain
+checkpoint_path: /path/to/backbones/VLM/RynnBrain-2B  # [Required]
+load_pretrained: true   # false = random-init (ablations / CPU smoke tests)
+max_length: 512         # processor max text length; longer inputs truncated

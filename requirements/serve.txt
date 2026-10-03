@@ -1,0 +1,5 @@
+# vLLM 0.18 platform image supplies Torch and accelerator kernels.
+# scripts/setup_vllm_environment.py installs the bundled Transformers 5.7.0
+# fork from vendor/transformers after installing these runtime dependencies.
+huggingface-hub==1.32.0
+regex==2026.9.10

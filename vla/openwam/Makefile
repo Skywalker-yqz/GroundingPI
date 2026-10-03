@@ -1,0 +1,30 @@
+.PHONY: test check compile clean lint format all help
+
+PYTHON ?= python
+
+help:
+	@echo "make test     - run the Fixed-16 test suite (CPU)"
+	@echo "make lint     - check code with ruff"
+	@echo "make format   - auto-format code with ruff"
+	@echo "make compile  - syntax-check Python sources with compileall"
+	@echo "make check    - compile + test"
+	@echo "make clean    - remove Python cache files"
+
+test:
+	$(PYTHON) -m pytest -q -m "not gpu" tests benchmarks/robotwin/tests
+
+lint:
+	$(PYTHON) -m ruff check openwam/ scripts/ tests/
+
+format:
+	$(PYTHON) -m ruff format openwam/ scripts/ tests/
+	$(PYTHON) -m ruff check --fix openwam/ scripts/ tests/
+
+compile:
+	$(PYTHON) -m compileall -q openwam scripts tests
+
+check: compile test
+
+clean:
+	find . -name "__pycache__" -type d -prune -exec rm -rf {} +
+	find . -name "*.pyc" -delete

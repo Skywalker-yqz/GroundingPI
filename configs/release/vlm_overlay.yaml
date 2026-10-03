@@ -1,0 +1,11 @@
+entrypoint: vlm-overlay
+args:
+- --model
+- weights/vlm
+- --output
+- weights/vlm_overlay
+env: {}
+inputs:
+- weights/vlm
+outputs:
+- weights/vlm_overlay

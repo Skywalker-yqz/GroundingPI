@@ -1,0 +1,22 @@
+# --- Base deploy settings ---
+checkpoint_path: null          # Default checkpoint dir; --ckpt-dir overrides
+device: cuda:0
+server:
+  host: "0.0.0.0"
+  port: 8848                   # WebSocket port
+
+# --- Inference (cfg.inference) ---
+# Every field has a same-name CLI override (--denoise-steps, --inference-mode, ...).
+inference:
+  denoise_steps: 10           # Euler steps of the Action Expert's flow sampler
+  denoise_mode: sync          # the Fixed-16 policies denoise actions only
+
+  inference_mode: sync        # executor: sync | async
+  inference_horizon: null     # actions executed per generated chunk; null = full chunk
+  inference_delay_steps: null # inference_mode=async only: expected latency in action steps
+
+# --- Deploy-time optimizations (cfg.optimization) ---
+optimization:
+  decode_video: false         # no video stream in the Fixed-16 policies
+  prompt_embed_cache:
+    maxsize: 32               # LRU cap for prompt -> text embeddings cache (Wan / Cosmos side)

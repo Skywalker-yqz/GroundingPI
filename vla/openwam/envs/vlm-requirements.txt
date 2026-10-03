@@ -1,0 +1,24 @@
+# Fixed-16 comparison — VLM + Wan environment.
+#
+#   python3 -m venv --system-site-packages <env>
+#   <env>/bin/pip install -r envs/vlm-requirements.txt
+#   printf '#!/bin/sh\nexec <env>/bin/python -m torch.distributed.run "$@"\n' > <env>/bin/torchrun
+#   chmod +x <env>/bin/torchrun
+#
+# The torchrun shim is not optional. scripts/train.sh invokes `torchrun`, and a
+# --system-site-packages venv does not ship one, so the system copy runs the
+# system interpreter — a different transformers, without the packages below.
+# The failure is quiet for backbones that happen to work either way.
+
+# 4.57.0 is the only version all five VLMs agree on:
+#   Qwen3-VL and its RynnBrain-2B derivative require >= 4.57.0
+#     (below that: "unrecognized architecture")
+#   Rex-Omni's tokenizer resolves to the wrong ids on 5.x, and HFVlmBackbone
+#     refuses to run rather than feed the model ids it was not trained on
+#   LocateAnything's remote code targets 4.x
+#   PaliGemma has worked since 4.42
+transformers==4.57.0
+
+# LocateAnything's remote modeling code imports both at load time.
+decord
+lmdb

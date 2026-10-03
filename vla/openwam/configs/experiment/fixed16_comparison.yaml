@@ -1,0 +1,61 @@
+# @package _global_
+#
+# Fixed-16 π-style backbone comparison — the unified fairness protocol.
+#
+#   bash scripts/train.sh +experiment=fixed16_comparison \
+#       model=vlm_system model/vlm_backbone=qwen3_vl_4b \
+#       dataloader.unify_action=false \
+#       model.architecture.action_dim=20 model.architecture.state_dim=20
+#
+#   bash scripts/train.sh +experiment=fixed16_comparison \
+#       model=dual_system_fixed16 model/video_backbone=wan22_ti2v_5b \
+#       dataloader.unify_action=false \
+#       model.architecture.action_dim=20 model.architecture.state_dim=20
+#
+# Everything that must be identical across backbones lives here, so a run is
+# reproduced by naming the experiment plus the backbone. What deliberately stays
+# on the CLI is what depends on the benchmark rather than the protocol: the
+# action width (see the README — do NOT use the unified 80-D space) and the data
+# paths.
+#
+# End-to-end fine-tuning is the main result: the backbone trains. A frozen
+# backbone measures how good the pretrained representation already is, which is
+# a different and narrower question — keep it as the ablation below, not as the
+# headline.
+
+training:
+  # Pretrained backbones move an order of magnitude slower than the randomly
+  # initialised stack bolted onto them. Same value for the VLM and the video DiT,
+  # or the two families are not adapted on equal terms and the comparison is void.
+  vlm_lr: 1.0e-5      # Qwen3-VL / PaliGemma / Rex-Omni / LocateAnything: ViT + LLM
+  video_lr: 1.0e-5    # Wan2.2-TI2V / Cosmos-Predict2.5: the DiT
+  bridge_lr: 1.0e-4   # projector + 64-query resampler + depth embeddings
+  action_lr: 1.0e-4   # the fixed 16-block Action Expert
+  learning_rate: 1.0e-4  # base; only reached by modules outside the groups above
+
+  lr_scheduler: cosine
+  warmup_ratio: 0.05
+
+  # Note: build_cosine_scheduler drives every group down to the same absolute
+  # eta_min (learning_rate x lr_min_ratio), so the 10x gap between backbone and
+  # action LR narrows over the run rather than holding constant. Fine as long as
+  # every backbone is trained on the identical schedule, which is the point.
+
+  # No video loss. The WAM backbones would otherwise get dense future-frame
+  # supervision the VLMs cannot receive, which is exactly the asymmetry this
+  # protocol exists to remove. Native OpenWAM results (lambda_video=1) are a
+  # separate row in the table, not part of this comparison.
+  lambda_video: 0.0
+  lambda_action: 1.0
+
+# Frozen Backbone Probe (required ablation, report §9.4 Protocol A). Run it as:
+#
+#   bash scripts/train.sh +experiment=fixed16_comparison \
+#       model=vlm_system model/vlm_backbone=qwen3_vl_4b \
+#       model.action_backbone.detach_backbone_features=true \
+#       '+model.freeze=[vlm_backbone.vlm_model]'
+#
+# and for the video side, `'+model.freeze=[video_backbone.dit, ...]'`. Both
+# switches are required together — setting one raises at the first forward. The
+# probe isolates the quality of the pretrained representation itself; it does not
+# replace the end-to-end result above.
