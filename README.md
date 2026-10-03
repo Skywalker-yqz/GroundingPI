@@ -1,5 +1,7 @@
 <h1 align="center"><img src="docs/assets/readme-title.svg" width="211" height="40" alt="GroundingPI" /></h1>
 
+<p align="center">English | <a href="README.zh-CN.md">简体中文</a></p>
+
 <p align="center"><strong>A Grounding Foundation Model towards Physical Intelligence with Visual Primitives</strong></p>
 
 <p align="center">
