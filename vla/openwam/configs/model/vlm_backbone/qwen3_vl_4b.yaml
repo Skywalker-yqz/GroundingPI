@@ -1,0 +1,7 @@
+# Qwen3-VL-4B understanding backbone (cfg.model.vlm_backbone.*).
+# Geometry is read from the checkpoint at load time, so the Fixed-16 π-style
+# depth taps place themselves: 36 blocks / hidden 2560 → taps
+# 0, 5, 10, 15, 20, 25, 30, 35, and a 2,622,464-parameter width projector.
+checkpoint_path: /path/to/backbones/VLM/Qwen3-VL-4B  # [Required]
+load_pretrained: true   # false = random-init (ablations / CPU smoke tests). Frozen in joint training.
+max_length: 512         # VLM processor max text length; longer inputs truncated.

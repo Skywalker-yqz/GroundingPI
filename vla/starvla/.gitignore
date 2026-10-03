@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv*/
+results/
+wandb/
+*.pt
+*.log
+.wandb_api_key
+.hf_token

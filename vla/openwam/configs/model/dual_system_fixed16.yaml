@@ -1,0 +1,41 @@
+# Fixed-16 π-style Layerwise Action DiT on a video-generation backbone.
+#
+#   bash scripts/train.sh model=dual_system_fixed16
+#   bash scripts/train.sh model=dual_system_fixed16 model/video_backbone=cosmos_predict25
+#
+# The sibling of vlm_system.yaml: same Action Expert, same taps, same adaptation
+# policy — the only thing that differs between the two is which backbone is
+# being read. Keep every field below in sync with vlm_system.yaml or the
+# comparison stops being a comparison.
+#
+
+defaults:
+  - video_backbone: wan22_ti2v_5b  # CLI: model/video_backbone=cosmos_predict25
+  - action_backbone: fixed16_pi_action_dit
+  - _self_
+
+# The video DiT co-trains with the action expert, matching vlm_system.yaml (whose
+# VLM is likewise trainable). Only the pretrained peripheral components are frozen: text_encoder/vae are Wan, reason1 is Cosmos, and each path
+# no-ops on a backbone that lacks it.
+#
+# For the frozen-backbone protocol (report §9.4) instead, add
+# `video_backbone.dit` to this list AND set
+# `model.action_backbone.detach_backbone_features=true` — both, or the first
+# forward refuses the run.
+freeze:
+  - video_backbone.text_encoder
+  - video_backbone.reason1
+  - video_backbone.vae
+  - video_backbone.video_encoder
+
+architecture:
+  framework: dual_system
+  variant: fixed16_pi_layerwise
+
+  # Keep identical to the VLM runs being compared against.
+  action_dim: 80          # unified cross-robot action space (unify_action=true)
+  use_proprioception: true
+  state_dim: 80
+
+# Set `training.lambda_video=0`: this architecture does not train a video stream
+# and warns on every step otherwise.

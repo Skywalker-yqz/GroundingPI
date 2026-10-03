@@ -1,0 +1,16 @@
+# Direct dependencies and required compatibility versions.
+PyYAML>=6,<7
+datasets==5.0.0
+pyarrow==24.0.0
+accelerate==1.13.0
+deepspeed==0.19.0
+tensorboard
+Pillow
+numpy
+safetensors
+flash-attn==2.7.4.post1
+qwen-vl-utils==0.0.14
+torch==2.9.0
+torchvision==0.24.0
+triton==3.5.0+git4328cd8b
+transformers==5.7.0

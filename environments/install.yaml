@@ -1,0 +1,18 @@
+schema_version: 1
+profiles:
+  train:
+    requirements: requirements/train.txt
+    snapshots:
+    - transformers
+    - swift
+    platform_runtime: ppu-2.9-py312
+  eval:
+    snapshots:
+    - lmms_eval
+    requirements: requirements/eval.txt
+    platform: Linux x86_64
+  serve:
+    requirements: requirements/serve.txt
+    snapshots: []
+    installer: scripts/setup_vllm_environment.py
+    platform: Linux x86_64

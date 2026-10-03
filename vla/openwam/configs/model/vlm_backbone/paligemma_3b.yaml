@@ -1,0 +1,16 @@
+# PaliGemma-3B understanding backbone (cfg.model.vlm_backbone.*).
+# Geometry is read from the checkpoint at load time, so the Fixed-16 pi-style
+# depth taps place themselves: 18 blocks / hidden 2048 -> taps 0, 2, 5, 7, 10, 12, 15, 17,
+# and a 2,098,176-parameter width projector.
+name: paligemma
+checkpoint_path: /path/to/backbones/VLM/Paligemma-3B  # [Required]
+load_pretrained: true   # false = random-init (ablations / CPU smoke tests)
+max_length: 512         # processor max text length; longer inputs truncated
+
+# google/paligemma-* is GATED: accept the license on the Hub and authenticate
+# before the first load, or from_pretrained returns 401.
+#
+# At 18 blocks this is the shallowest backbone in the comparison — its 8 taps sit
+# 2-3 blocks apart where a 36-block VLM's sit 5 apart. Normalized-depth sampling
+# handles it, but say so in the writeup: "PaliGemma is weaker" must not be
+# confused with "PaliGemma has fewer distinct depths to tap".

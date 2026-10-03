@@ -1,0 +1,14 @@
+{
+  "family": "groundingpi_qwen3",
+  "files": {
+    "configuration_groundingpi_vision.py": "5271ee5625322634fd181d9b4cd47249abf7b97c844baf57544a557f49bffd5d",
+    "configuration_groundingpi.py": "feb2c7822fbc4e26ef0793c31bf38407e5cc019f922b867fdeef7c4e17da84f1",
+    "image_processing_groundingpi.py": "0b81c45dbe91473c4370ad8a4f95e56defb92bbcff35f22f85518937da061db7",
+    "media_utils.py": "cd35b564297094520a970dd30555b8af20291746ce30e9b4c33d04eda16f2b09",
+    "modeling_groundingpi_vision.py": "fb1243c45e2be50517c867e68bc2eeee7d7cb4341f9846db2f50105ee9d95dd2",
+    "modeling_groundingpi.py": "c89476c7969ce2115ddb5fa3cace84090ebd2f24216f43c73d4eca51a42bb28b",
+    "processing_groundingpi.py": "fada769df58fa0d4efd9d4ec45688f6cf01e0c5433539fa9cc888f5615db5fe4",
+    "streammind_gate.py": "6e4b0d13a6c4108eb8f3b5ad4cd6c7a026cac193d1616cbb74e3c1615200c2cf",
+    "LICENSE": "20c797ce19af0c17de52c6afb144644768a591c521655f5ebf5712c9850f2887"
+  }
+}

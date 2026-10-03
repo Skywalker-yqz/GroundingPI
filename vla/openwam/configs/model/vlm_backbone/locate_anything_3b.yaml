@@ -1,0 +1,15 @@
+# LocateAnything-3B understanding backbone (cfg.model.vlm_backbone.*).
+# Geometry is read from the checkpoint at load time, so the Fixed-16 pi-style
+# depth taps place themselves: 36 blocks / hidden 2048 -> taps 0, 5, 10, 15, 20, 25, 30, 35,
+# and a 2,098,176-parameter width projector.
+name: locate_anything
+checkpoint_path: /path/to/backbones/VLM/LocateAnything-3B  # [Required]
+load_pretrained: true   # false = random-init (ablations / CPU smoke tests)
+max_length: 512         # processor max text length; longer inputs truncated
+
+# REQUIRED and deliberately not defaulted: this checkpoint ships its own
+# modeling_locateanything.py and only loads with trust_remote_code=True, i.e.
+# loading it EXECUTES PYTHON FROM THE CHECKPOINT DIRECTORY at train and deploy
+# time. Every other VLM here avoids that. Only point checkpoint_path at a
+# directory you trust.
+allow_remote_code: true

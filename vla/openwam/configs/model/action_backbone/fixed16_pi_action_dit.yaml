@@ -1,0 +1,214 @@
+# Fixed-16 π-style Layerwise Action DiT (cfg.model.action_backbone.*).
+#
+# Use with `architecture.variant: fixed16_pi_layerwise`. Unlike
+# separate_action_dit.yaml, NOTHING here is auto-resolved from the video
+# backbone: the Action Expert is byte-identical across every backbone under
+# evaluation, and that is the entire point of the protocol. The only
+# backbone-dependent module is the shared width projector D_B -> 1024, which the
+# architecture builds from `video_backbone.dim` and reports separately.
+#
+# `resolve_architecture_config` flattens this block into the architecture
+# params, so every key below is read via `_cfg_get(cfg, ...)`.
+#
+# The Action Expert geometry is listed below so this file matches report §12
+# key for key, but every entry is CHECKED against the protocol's pinned value
+# and a deviation is refused unless `allow_geometry_override: true`. Editing a
+# number here without that flag raises at construction rather than silently
+# producing an Action Expert that is no longer comparable across backbones.
+
+# --- Action / state interface (per benchmark; keep identical across backbones) -
+# action_dim / state_dim / use_proprioception come from `architecture:` and
+# default to the 80-D unified action space (unify_action=true).
+#
+# action_horizon = the action chunk length the head predicts, and the single
+# source of truth for it. The protocol does not fix a particular number — it
+# only requires the value to be constant within a benchmark and identical across
+# every backbone being compared. Change it here, not in the dataloader.
+#
+# The dataloader ships `num_frames - 1` action steps (33 - 1 = 32 by default).
+# When it ships more than action_horizon, compute_loss keeps the LEADING steps
+# (t=1..H) — the observation is frame 0, so the chunk to predict starts at t=1.
+# When it ships fewer, construction raises instead of quietly training short.
+action_horizon: 32
+
+# --- Flow matching ------------------------------------------------------------
+# a_t = (1-t)·eps + t·a, v* = a - eps. NOTE the opposite sign convention from
+# the native OpenWAM action scheduler (eps - a on a shifted-sigmoid sigma grid);
+# the head owns this schedule end to end.
+noise_beta_alpha: 1.5
+noise_beta_beta: 1.0
+noise_s: 0.999
+num_timestep_buckets: 1000
+num_inference_steps: 10     # Euler steps; the backbone is NOT re-run per step
+
+# Flow timesteps drawn per sample, off ONE backbone forward. 1 = one draw.
+#
+# Flow matching's sample efficiency is bounded by the number of (sample, t) pairs,
+# not by the number of samples, and the backbone dominates the step cost — so K
+# draws multiply the supervision while only the 243M Action Expert repeats. The
+# loss is the mean over K, so the learning rate carries over from K=1 unchanged.
+#
+# starVLA's LayerwiseFM configs use 2 to 8. At K=1 with global batch 256 this
+# path sees 256 (sample, t) pairs per step, which is the gap to close when the
+# head is undertrained rather than diverging. Raising K does NOT increase how often the data is revisited, so it
+# adds supervision without adding overfitting pressure.
+repeated_diffusion_steps: 1
+
+# --- Action Expert geometry (report §9.1 fixed items; §12 key names) ----------
+# Refused unless allow_geometry_override: true. These are precisely the values
+# that must not differ between the backbones being compared — a typo here would
+# change the Action Expert's capacity and quietly invalidate every number in the
+# comparison table, with nothing in the logs to show for it.
+allow_geometry_override: false
+
+num_blocks: 16              # 16 atomic blocks = 8 cross + 8 self
+hidden_dim: 1024            # d
+num_attention_heads: 16
+attention_head_dim: 64      # heads x head_dim must equal hidden_dim
+ffn_dim: 4096               # f
+num_depth_taps: 8           # 8 normalized-depth hidden taps
+condition_hidden_dim: 1024  # taps are projected to the Action residual width
+tokens_per_tap: 64          # fixed K/V token budget, identical for every backbone
+num_planning_tokens: 32     # learnable planning/future tokens
+max_seq_len: 1024           # learned position embedding table size
+
+# Structural properties with no switch behind them. Read and checked so §12 is
+# fully represented, but NOT unlocked by allow_geometry_override: there is no
+# second implementation to select, so honouring a different value is impossible
+# and accepting one would misreport what actually runs.
+interleave_self_attention: true
+first_block: cross
+attention_bias: true
+norm_type: ada_norm            # AdaLN before attention; FFN uses a plain LayerNorm
+norm_elementwise_affine: false # the shared depth LN is parameter-free (§8)
+internal_dit_output_head: false
+share_projector_across_depth: true
+share_resampler_across_depth: true
+raw_context_cross_attention: false  # instruction reaches control only via the taps
+decode_action_positions_only: true
+
+# --- Action Expert initialisation ---------------------------------------------
+# null (default) = the Action Expert's own random init.
+#
+# A path to a Wan DiT checkpoint instead warm-starts it by resampling that DiT's
+# blocks: depth 30 -> 16 by the same normalized-depth rule the taps use, width
+# 3072 -> 1024 by area interpolation, then each tensor rescaled to the standard
+# deviation the target's own init would have had (interpolation averages the
+# spread away, and the narrower layer needs a wider spread to hold its output
+# variance). AdaLN, the encoders and the decoder have no counterpart in a video
+# DiT and stay random.
+#
+# USE THE SAME SOURCE FOR EVERY BACKBONE IN A COMPARISON. Pointing each run at
+# its own backbone would give every row of the table a different Action Expert,
+# which is exactly the variable the protocol exists to hold fixed — and nothing
+# in the logs would say so.
+action_expert_init_source: null
+action_expert_init_rescale: true
+
+# --- Backbone conditioning ----------------------------------------------------
+# 8 taps at normalized depth l_j = round(j*(N_B-1)/7):
+#   Wan2.2-TI2V-5B           (30 blocks) -> 0,4,8,12,17,21,25,29
+#   CosmosPredict25          (28 blocks) -> 0,4,8,12,15,19,23,27
+#   Qwen3-VL-4B / Rex-Omni-3B / LocateAnything-3B (36 blocks) -> 0,5,10,15,20,25,30,35
+# Ablations (report section 10): last_hidden | final_8 | bin_average.
+condition_sampling: normalized_depth
+
+# --- Condition pathway --------------------------------------------------------
+# How backbone hidden states reach the Action Expert. One knob, not five: the two
+# pathways are not meant to be mixed and every intermediate combination is a
+# configuration nobody has run.
+#
+#   report  (default) — the design document's §2.1/§3/§8 pathway, and what every
+#       checkpoint so far was trained with: LN(H)*W_B + e_j, then a shared
+#       64-query resampler; position embeddings over the whole
+#       [state; planning; action] stack.
+#
+#   starvla — starVLA's WanPI pathway: one shared Linear(D_B, 1024) and nothing
+#       else, conditions keeping the backbone's own sequence (its padding mask
+#       travels with them into the cross-attention); position embeddings on the
+#       action tokens alone.
+#
+# Why starvla exists: compressing to 64 keys put a hard bottleneck in front of
+# block 0's cross-attention: a head could commit its whole softmax to one key.
+# Measured on a co-trained Wan run, block 0 reached a logit gap of 6.7e6 with
+# softmax entropy 0 and both backbone and conditioner reporting gradient norm 0.
+# WanPI has no such bottleneck -- it cross-attends over the full sequence.
+#
+# The two produce DIFFERENT parameter sets (report carries the resampler's
+# 4,265,984 parameters and 8,192 depth embeddings; starvla carries neither), so
+# their checkpoints are NOT interchangeable. Use the same pathway for every
+# backbone in a comparison.
+condition_pathway: report
+
+add_depth_embedding: true
+
+# How the tapped hidden states are normalized before the shared projector.
+#   parameter_free (default) = report §2.1's LN(H)·W_B. The only mode whose
+#       projector budget matches §8's 1024·D_B + 1024.
+#   affine = the same LayerNorm with learnable scale/shift (+2·D_B parameters).
+#   none   = no norm; project the raw hidden states, as starVLA's WanPI does.
+#
+# Why the switch exists: parameter_free erases the backbone's feature SCALE, so a
+# tap with std 1.0 and one with std 0.01 give identical output and the action loss
+# cannot tell them apart. Nothing then holds that scale in place, while
+# LayerNorm's backward carries a 1/σ factor — as the scale drifts down the
+# gradient reaching the backbone grows. With lambda_video=0 there is no video loss
+# left to anchor those features, and co-trained Wan runs have been observed
+# diverging late in training (grad_norm 0.3 -> 1e7 by step 21k) with the pre-clip
+# norm rising monotonically in every run. affine gives the scale a degree of
+# freedom; none removes the 1/σ path altogether.
+#
+# Off-protocol modes log a warning. Use the SAME mode for every backbone.
+condition_depth_norm: parameter_free
+
+# --- Feature extraction state (must be pinned, never sampled) -----------------
+# The comparison is only meaningful if one observation always maps to one
+# condition set. sigma=0 feeds the clean VAE latent; a non-zero value injects
+# noise from `feature_extraction_seed` instead.
+feature_extraction_timestep: 0.0
+feature_extraction_sigma: 0.0
+feature_extraction_seed: 0
+
+# --- Observation ---------------------------------------------------------------
+# How many leading frames of the clip count as "the observation". Every backbone
+# must be handed the same pixels, and the VLM path can only consume one image, so
+# 1 is the only value that keeps the comparison honest. Truncation happens BEFORE
+# the VAE (the encoder is temporally causal with factor 4, so slicing latents
+# afterwards would give a blend of four frames instead of frame 0).
+# Wan silently rounds num_frames up to the next 4k+1, so only 1 / 5 / 9 / ... are
+# accepted; anything else raises rather than quietly changing the latent shape.
+num_observation_frames: 1
+
+# --- Adaptation protocol ------------------------------------------------------
+# Co-training: action gradients flow into the backbone, which is fine-tuned along
+# with the Action Expert. This is a deliberate departure from report §9.4, which
+# makes Protocol A (frozen backbone) the headline result — record it as
+# "full-parameter matched adaptation" rather than as either of the report's two
+# protocols, and keep LR and step count identical across backbones so the
+# comparison still holds.
+#
+# false = co-training (here). The backbone must NOT appear in the model config's
+#         `freeze:` list, or it receives no gradient and this is a no-op.
+# true  = Protocol A. Gradients stop at the taps, and the `freeze:` list does the
+#         real work (requires_grad off AND forward under no_grad, so activations
+#         are not retained). Both halves have to be set together: add
+#         `vlm_backbone.vlm_model` to vlm_system.yaml's `freeze:`, or
+#         `video_backbone.dit` to dual_system_fixed16.yaml's.
+#
+# A half-set protocol raises at the first forward rather than training something
+# other than what the config claims.
+detach_backbone_features: false
+
+# --- Action Expert compute precision ------------------------------------------
+# false (default) = whatever DeepSpeed set, i.e. bf16 under mixed_precision=bf16.
+# true = run the Action Expert's forward in fp32 while its parameters stay bf16.
+#
+# DeepSpeed casts the whole engine module to bf16 at prepare() with no per-module
+# escape, so this is done by casting the parameters to fp32 inside the graph
+# (torch.func.functional_call) with autocast disabled for the region. Gradients
+# flow back to the bf16 parameters, so ZeRO-2 and its fp32 master weights are
+# unaffected. Costs ~0.97 GB per live call plus fp32 matmuls over 243M params.
+#
+# Not a fix for a saturated softmax: a 6.7e6 logit gap gives probability exactly
+# 1.0 and gradient exactly 0 in fp32 too. Use the SAME setting for every backbone.
+action_expert_fp32: true

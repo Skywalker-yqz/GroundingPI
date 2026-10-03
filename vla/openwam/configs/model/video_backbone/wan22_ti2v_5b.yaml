@@ -1,0 +1,13 @@
+# Wan2.2-TI2V-5B video backbone (cfg.model.video_backbone.*). Supports external
+# encoder + from_scratch.
+
+defaults:
+  - encoder: wan_vae   # external encoder subgroup (only used with from_scratch=true)
+  - _self_
+
+name: wan22_ti2v_5b   # any H,W % 32 == 0
+model_path: /path/to/backbones/WAM/Wan2.2-TI2V-5B  # [Required] weights dir
+
+from_scratch: false   # false = load pretrained DiT | true = re-init DiT from scratch (VAE/text-encoder still load + freeze)
+
+shift_video: 5.0       # Flow-matching α-shift (VIDEO scheduler); single source of truth for train + inference
