@@ -37,7 +37,7 @@ print(result.to_dict())
 
 Use `task="point"` for point localization. See [examples](../examples/README.md) for visualization and command-line usage.
 
-Custom API requests should preserve spatial tokens with `skip_special_tokens=false`. Set the evaluation recipe's `api_url` and `model_id` to match the service, and use `service_contract: openai`. See [Evaluation](EVALUATION.md).
+Custom API requests must preserve spatial tokens and their adjacency with `skip_special_tokens=false` and `spaces_between_special_tokens=false`. Set the evaluation recipe's `api_url` and `model_id` to match the service, and use `service_contract: openai`. See [Evaluation](EVALUATION.md).
 
 ## Native service
 
@@ -48,3 +48,9 @@ The native Transformers service uses the training environment:
 ```
 
 Configure its model path, address, and generation settings in `configs/release/vlm_serve.yaml`.
+
+## 🗂️ Batch annotation
+
+For image collections, use the resumable [JSONL batch example and guide](BATCH_INFERENCE.md). The client supports the OpenAI-compatible endpoint and preserves GAM coordinate tokens.
+
+See the [vLLM Deployment Guide](VLLM.md) for platform setup, configuration, and a complete image request.
