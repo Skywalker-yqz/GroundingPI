@@ -28,7 +28,7 @@
 
 ## 🧭 Contents
 
-[Highlights](#highlights) · [Demo](#demo) · [Models](#models) · [Installation](#installation) · [Quick Start](#quick-start) · [Tasks and Output Format](#tasks-and-output-format) · [Method and Inference Infrastructure](#method-and-inference-infrastructure) · [Evaluation](#evaluation) · [Training](#training) · [Physical Intelligence](#physical-intelligence) · [Results](#results) · [Documentation](#documentation) · [License](#license) · [Citation](#citation) · [Acknowledgement](#acknowledgement)
+[Highlights](#highlights) · [Demo](#demo) · [Models](#models) · [Installation](#installation) · [Quick Start](#quick-start) · [vLLM Deployment](#vllm-deployment) · [Tasks and Output Format](#tasks-and-output-format) · [Method and Inference Infrastructure](#method-and-inference-infrastructure) · [Evaluation](#evaluation) · [Training](#training) · [Physical Intelligence](#physical-intelligence) · [Results](#results) · [Documentation](#documentation) · [License](#license) · [Citation](#citation) · [Acknowledgement](#acknowledgement)
 
 <a id="highlights"></a>
 
@@ -147,6 +147,37 @@ python3 examples/predict.py \
 </details>
 
 See [Examples](examples/README.md) and the [client implementation](grounding_pi/client.py) for more usage details.
+
+<a id="vllm-deployment"></a>
+
+## ⚡ vLLM Deployment
+
+The default GroundingPI service uses **vLLM's Transformers backend** with the repository's model and processor adapter. Start from **Linux x86_64 / Python 3.12** with accelerator-compatible **Torch and vLLM 0.18.x** already installed. The setup inherits that runtime and installs the bundled **Transformers 5.7.0 fork**.
+
+For **NVIDIA GPUs**, run from the repository root:
+
+```bash
+hf download GroundingPI/GroundingPI --local-dir weights/vlm
+python3 run.py setup serve --platform gpu
+python3 run.py serve --config configs/release/vlm_vllm_gpu.yaml
+```
+
+For **PPU**, use the matching vendor image and PPU build of vLLM, then replace the two commands after download with:
+
+```bash
+python3 run.py setup serve --platform ppu
+python3 run.py serve --config configs/release/vlm_vllm_ppu.yaml
+```
+
+If the serving environment is already prepared, skip setup. Setup requires a new environment directory; use the same `--venv` on setup and serving when choosing a different directory. Once the server is ready, check its model list in another terminal:
+
+```bash
+curl --fail http://127.0.0.1:8000/v1/models
+```
+
+The endpoint is **`http://127.0.0.1:8000/v1`**, with model ID **`groundingpi`**. Defaults are **BF16, eager execution, TP=1, one active sequence, 16,384 context tokens, and 0.7 accelerator-memory utilization**. Each request accepts one image; video is disabled. The adapter reuses the checkpoint's weights through a separate serving overlay.
+
+For custom `/chat/completions` requests, set **`skip_special_tokens: false`** and **`spaces_between_special_tokens: false`** to preserve GAM's adjacent coordinate tokens. Use **GAM** evaluation mode. See the [vLLM Deployment Guide](docs/VLLM.md) for a complete single-image API example, configuration overrides, and runtime checks.
 
 <a id="tasks-and-output-format"></a>
 
