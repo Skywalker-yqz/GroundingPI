@@ -1,4 +1,4 @@
-<h1 align="center"><img src="../docs/assets/readme-title.svg" width="211" height="40" alt="GroundingPI" /></h1>
+<h1 align="center"><img src="docs/assets/readme-title.svg" width="211" height="40" alt="GroundingPI" /></h1>
 
 <p align="center"><a href="README.md">English</a> | 简体中文</p>
 
@@ -14,7 +14,7 @@
 
 <p align="center"><a href="#demo">演示视频</a> · <a href="#quick-start">快速开始</a> · <a href="#documentation">文档</a> · <a href="#citation">引用</a></p>
 
-<p align="center"><img src="../docs/assets/teaser.png" alt="GroundingPI visual grounding overview" width="100%" /></p>
+<p align="center"><img src="docs/assets/teaser.png" alt="GroundingPI visual grounding overview" width="100%" /></p>
 
 <a id="news"></a>
 
@@ -72,7 +72,7 @@ python3 -m pip install -r requirements.txt huggingface_hub
 
 `requirements.txt` 安装轻量 HTTP 客户端、可视化工具和安装所需依赖。服务、训练和评测各自使用独立环境；仅执行 `pip install -r requirements.txt` 不会安装模型运行时。客户端不加载权重，也不依赖 Torch。
 
-**已测试的加速器：** NVIDIA **B300、B200、H200、H800** 以及 **PPU**。请为每种加速器使用匹配的运行时。安装细节见[环境说明](../environments/README.md)。
+**已测试的加速器：** NVIDIA **B300、B200、H200、H800** 以及 **PPU**。请为每种加速器使用匹配的运行时。安装细节见[环境说明](environments/README.md)。
 
 <a id="quick-start"></a>
 
@@ -96,7 +96,7 @@ python3 run.py serve
 |:---|:---|:---|
 | GroundingPI | `http://127.0.0.1:8000/v1` | `groundingpi` |
 
-请下载完整的模型包。vLLM 适配器使用独立的 overlay 并复用原始权重分片；切换检查点时请使用新的 overlay 输出目录，详见[推理指南](../docs/INFERENCE.md)。
+请下载完整的模型包。vLLM 适配器使用独立的 overlay 并复用原始权重分片；切换检查点时请使用新的 overlay 输出目录，详见[推理指南](docs/INFERENCE.md)。
 
 <a id="run-a-prediction"></a>
 
@@ -146,7 +146,7 @@ python3 examples/predict.py \
 
 </details>
 
-更多用法见[示例说明](../examples/README.md)和[客户端实现](../grounding_pi/client.py)。
+更多用法见[示例说明](examples/README.md)和[客户端实现](grounding_pi/client.py)。
 
 <a id="vllm-deployment"></a>
 
@@ -177,7 +177,7 @@ curl --fail http://127.0.0.1:8000/v1/models
 
 服务地址为 **`http://127.0.0.1:8000/v1`**，模型 ID 为 **`groundingpi`**。默认配置为 **BF16、eager 执行、TP=1、单活跃序列、16,384 上下文长度、0.7 加速器显存利用率**。每个请求只接受一张图片；视频未启用。适配器通过独立的服务 overlay 复用检查点权重。
 
-自定义 `/chat/completions` 请求请设置 **`skip_special_tokens: false`** 和 **`spaces_between_special_tokens: false`**，以保留 GAM 相邻坐标词元。评测请使用 **GAM** 模式。完整的单图 API 示例、配置覆盖与运行时检查见 [vLLM 部署指南](../docs/VLLM.md)。
+自定义 `/chat/completions` 请求请设置 **`skip_special_tokens: false`** 和 **`spaces_between_special_tokens: false`**，以保留 GAM 相邻坐标词元。评测请使用 **GAM** 模式。完整的单图 API 示例、配置覆盖与运行时检查见 [vLLM 部署指南](docs/VLLM.md)。
 
 <a id="tasks-and-output-format"></a>
 
@@ -226,13 +226,13 @@ GroundingPI 由 **MoonViT-V2 / Kimi-K3 视觉主干**、**2 × 2 空间聚合投
 
 默认服务使用 **vLLM**、**BF16**、每请求单图、**16,384 词元上下文上限**和张量并行 **1**。自定义适配器保留模型原生空间词元接口，由 vLLM 负责执行和 KV 缓存。
 
-附带的启动器使用 **eager 执行**；本方案中**禁用 CUDA Graph**。另提供原生 Transformers 参考服务。自定义配置和参考后端用法见[推理说明](../docs/INFERENCE.md)。
+附带的启动器使用 **eager 执行**；本方案中**禁用 CUDA Graph**。另提供原生 Transformers 参考服务。自定义配置和参考后端用法见[推理说明](docs/INFERENCE.md)。
 
 <a id="evaluation"></a>
 
 ## 📈 评测
 
-GroundingPI 评测套件覆盖论文报告的 **34 个基准**。[评测指南](../eval/README.md)提供数据链接、路径设置、论文采用的 34 个任务选择、输入校验和完整套件执行方法。
+GroundingPI 评测套件覆盖论文报告的 **34 个基准**。[评测指南](eval/README.md)提供数据链接、路径设置、论文采用的 34 个任务选择、输入校验和完整套件执行方法。
 
 共享评测器支持 **7 种模式**：
 
@@ -253,13 +253,13 @@ python3 run.py setup eval
 python3 run.py eval --config configs/eval/gam.yaml
 ```
 
-内置配置是部分任务的 **8 样本 smoke 测试**。如需完整的 34 基准套件，请按[完整评测流程](../eval/README.md#full-suite)操作：选择论文任务列表、使用 `limit: null`，并在新的 `run_id` 下写入结果。评测只连接已有服务，不会启动或切换解码器。
+内置配置是部分任务的 **8 样本 smoke 测试**。如需完整的 34 基准套件，请按[完整评测流程](eval/README.md#full-suite)操作：选择论文任务列表、使用 `limit: null`，并在新的 `run_id` 下写入结果。评测只连接已有服务，不会启动或切换解码器。
 
 <a id="training"></a>
 
 ## 🏋️ 训练
 
-训练在独立环境中运行。启动前请准备完整的模型文件、分词器、校验过的输入缓存和清单。附带的训练环境面向匹配的 **PPU 厂商镜像**。运行时与依赖见[环境说明](../environments/README.md)。
+训练在独立环境中运行。启动前请准备完整的模型文件、分词器、校验过的输入缓存和清单。附带的训练环境面向匹配的 **PPU 厂商镜像**。运行时与依赖见[环境说明](environments/README.md)。
 
 <a id="configure-supervised-fine-tuning"></a>
 
@@ -267,8 +267,8 @@ python3 run.py eval --config configs/eval/gam.yaml
 
 | 配置 | 需要设置的内容 |
 |:---|:---|
-| [`configs/train/vlm.yaml`](../configs/train/vlm.yaml) | 模型与分词器清单路径、准备好的输入缓存、学习率、批大小、序列长度和输出目录 |
-| [`configs/release/vlm_train.yaml`](../configs/release/vlm_train.yaml) | 原生配置路径、环境和分布式启动设置 |
+| [`configs/train/vlm.yaml`](configs/train/vlm.yaml) | 模型与分词器清单路径、准备好的输入缓存、学习率、批大小、序列长度和输出目录 |
+| [`configs/release/vlm_train.yaml`](configs/release/vlm_train.yaml) | 原生配置路径、环境和分布式启动设置 |
 
 原生配方支持为语言模型、视觉编码器和投影层分别设置学习率。通过 freeze 开关选择训练哪些组件。请保持 `runtime.expected_nodes`、`expected_gpus_per_node` 和 `expected_world_size` 与启动拓扑一致。有效全局批大小 = 单卡批大小 × world size × 梯度累积步数。
 
@@ -281,7 +281,7 @@ python3 run.py setup train
 python3 run.py train --config configs/release/vlm_train.yaml
 ```
 
-默认配方使用 BF16，检查点写入 `outputs/vlm_train/`。输入缓存必须与模型分词器匹配并携带所需清单。参见[数据准备](../docs/DATA_PREPARATION.md)；本仓库不提供通用的 JSONL 到训练缓存转换器。
+默认配方使用 BF16，检查点写入 `outputs/vlm_train/`。输入缓存必须与模型分词器匹配并携带所需清单。参见[数据准备](docs/DATA_PREPARATION.md)；本仓库不提供通用的 JSONL 到训练缓存转换器。
 
 <a id="resume-training"></a>
 
@@ -289,20 +289,20 @@ python3 run.py train --config configs/release/vlm_train.yaml
 
 将启动 YAML 中的 `checkpoint.resume_from_checkpoint`（或原生 YAML 中的 `training.resume_from_checkpoint`）指向一个完整的训练检查点。在一处配置后，重新执行同一条启动命令即可。续训需要包含优化器、调度器和训练状态的检查点。
 
-详细的配置与检查点流程见[训练说明](../docs/TRAINING.md)。
+详细的配置与检查点流程见[训练说明](docs/TRAINING.md)。
 
 <a id="physical-intelligence"></a>
 
 ## 🤖 物理智能
 
-[`vla/`](../vla/README.md) 目录包含基于 StarVLA 和 OpenWAM 的主干对比流程，配有独立的策略训练与评测配置：
+[`vla/`](vla/README.md) 目录包含基于 StarVLA 和 OpenWAM 的主干对比流程，配有独立的策略训练与评测配置：
 
 | 集成 | 入口 |
 |:---|:---|
-| 动作模型主干对比 | [starVLA 集成](../vla/starvla/README.md) |
-| 动作模型主干对比 | [OpenWAM 集成](../vla/openwam/README.md) |
+| 动作模型主干对比 | [starVLA 集成](vla/starvla/README.md) |
+| 动作模型主干对比 | [OpenWAM 集成](vla/openwam/README.md) |
 
-Hugging Face 发布的是 grounding 视觉-语言模型。上述对比方案使用 [VLA 指南](../vla/README.md)中列出的主干，需要各自的环境与策略检查点；它们不为已发布的 GroundingPI 检查点提供直接的动作策略适配器。
+Hugging Face 发布的是 grounding 视觉-语言模型。上述对比方案使用 [VLA 指南](vla/README.md)中列出的主干，需要各自的环境与策略检查点；它们不为已发布的 GroundingPI 检查点提供直接的动作策略适配器。
 
 <p align="center"><img src="https://huggingface.co/GroundingPI/GroundingPI/resolve/afeca16451e4ad4aec9ebbe91fc3f63f8bfa5c49/assets/fig6-physical-intelligence.png" alt="GroundingPI physical intelligence results" width="100%" /></p>
 
@@ -322,13 +322,13 @@ Hugging Face 发布的是 grounding 视觉-语言模型。上述对比方案使�
 
 | 指南 | 内容 |
 |:---|:---|
-| [环境说明](../environments/README.md) | 各流程环境与平台前提 |
-| [推理](../docs/INFERENCE.md) | 服务、模型准备、配置与参考后端 |
-| [示例](../examples/README.md) | 图片预测、JSON 输出与可视化 |
-| [评测](../eval/README.md) | 数据集准备、论文基准套件、执行与结果 |
-| [训练](../docs/TRAINING.md) | 训练配方、分布式设置与检查点 |
-| [数据准备](../docs/DATA_PREPARATION.md) | 输入格式与本地准备要求 |
-| [第三方来源](../third_party/README.md) | 内置框架与来源说明 |
+| [环境说明](environments/README.md) | 各流程环境与平台前提 |
+| [推理](docs/INFERENCE.md) | 服务、模型准备、配置与参考后端 |
+| [示例](examples/README.md) | 图片预测、JSON 输出与可视化 |
+| [评测](eval/README.md) | 数据集准备、论文基准套件、执行与结果 |
+| [训练](docs/TRAINING.md) | 训练配方、分布式设置与检查点 |
+| [数据准备](docs/DATA_PREPARATION.md) | 输入格式与本地准备要求 |
+| [第三方来源](third_party/README.md) | 内置框架与来源说明 |
 
 ```text
 GroundingPI/
@@ -352,9 +352,9 @@ GroundingPI/
 
 本项目原创贡献以 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) 提供，项目方不附加额外限制。该授权仅覆盖贡献作者所持有的权利。
 
-第三方材料保留其适用的许可证，包括适用于 Kimi 衍生材料及衍生作品的 [Kimi K3 License](../models/vlm/LICENSE)。这些上游条款持续有效。组件归属见[第三方声明](../THIRD_PARTY_NOTICES.md)，模型包的授权范围见[已发布模型的许可证](https://huggingface.co/GroundingPI/GroundingPI/blob/main/LICENSE)。
+第三方材料保留其适用的许可证，包括适用于 Kimi 衍生材料及衍生作品的 [Kimi K3 License](models/vlm/LICENSE)。这些上游条款持续有效。组件归属见[第三方声明](THIRD_PARTY_NOTICES.md)，模型包的授权范围见[已发布模型的许可证](https://huggingface.co/GroundingPI/GroundingPI/blob/main/LICENSE)。
 
-物理智能集成保留 [`vla/LICENSE`](../vla/LICENSE) 及其[第三方声明](../vla/THIRD_PARTY_NOTICES.md)中的条款。
+物理智能集成保留 [`vla/LICENSE`](vla/LICENSE) 及其[第三方声明](vla/THIRD_PARTY_NOTICES.md)中的条款。
 
 <a id="citation"></a>
 

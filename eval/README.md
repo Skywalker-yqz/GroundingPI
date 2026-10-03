@@ -19,7 +19,7 @@ python3 run.py setup eval
 
 Setup installs the bundled evaluation engine and its dependencies. Serving and evaluation use separate environments. Reuse an existing evaluation environment; the installer does not overwrite it. See [Environment Setup](../environments/README.md).
 
-Download the model and prepare serving through the [repository Quick Start](../.github/README.md#quick-start). Start the matching service in another terminal and keep it running throughout evaluation.
+Download the model and prepare serving through the [repository Quick Start](../README.md#quick-start). Start the matching service in another terminal and keep it running throughout evaluation.
 
 ```bash
 python3 run.py serve
@@ -199,4 +199,4 @@ Task definitions live under `Grounding/`, `Dense/`, `Referring/`, `Pointing/`, `
 - [Task registry](../configs/eval/tasks.json)
 - [Evaluation launcher](../scripts/evaluate.py)
 - [Environment setup](../environments/README.md)
-- [Return to the project README](../.github/README.md)
+- [Return to the project README](../README.md)
