@@ -47,9 +47,9 @@
 
 ## ✨ Highlights
 
-- **A strong grounding foundation model.** We introduce GroundingPI, a 4B model built on visual primitives that unifies diverse perception tasks through points, boxes, and a shared coordinate vocabulary. A staged training recipe delivers state-of-the-art grounding performance across 34 benchmarks.
-- **Transfer toward physical intelligence.** Autonomous-driving and robotic-manipulation evaluations demonstrate strong in-distribution and out-of-distribution transfer, together with improved action-data efficiency.
-- **Insights into perceptual pretraining and embodied model design.** We analyze how pretraining scale and data composition affect grounding and downstream transfer, highlighting dense grounding and OCR and discussing implications for System-1 foundations that complement high-level reasoning and planning.
+- **A strong grounding foundation model.** We introduce GroundingPI, a 4B model built on visual primitives, with a staged training recipe and state-of-the-art grounding performance.
+- **Transfer toward physical intelligence.** Autonomous driving and robotic manipulation evaluations demonstrate the value of this perceptual foundation, including strong ID and OOD performance and improved action-data efficiency.
+- **Insights into perceptual pretraining and future embodied paradigms.** We analyze how pretraining scale and data composition shape grounding and transfer, and discuss implications for System-1 foundation-model design and its complementary role in future embodied systems.
 
 <a id="demo"></a>
 
@@ -261,7 +261,7 @@ Use the checkpoint's tokenizer, processor, and chat template. Custom HTTP reques
 
 ## ⚙️ Method and Inference Infrastructure
 
-GroundingPI combines a **MoonViT-V2 / Kimi-K3 vision backbone**, a **2 × 2 spatial aggregation projector**, and a **Qwen3-4B-Instruct-2507** language backbone. It generates semantic labels, protocol markers, and 1,000 coordinate tokens autoregressively.
+GroundingPI combines a MoonViT-V2 (Kimi K3) visual encoder, a learnable multimodal projector, and a Qwen3-4B language backbone.
 
 <p align="center"><img src="https://huggingface.co/GroundingPI/GroundingPI/resolve/afeca16451e4ad4aec9ebbe91fc3f63f8bfa5c49/assets/fig2-architecture.png" alt="GroundingPI architecture" width="100%" /></p>
 

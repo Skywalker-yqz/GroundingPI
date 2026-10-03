@@ -34,9 +34,9 @@
 
 ## ✨ 亮点
 
-- **强大的 grounding 基础模型。** 我们提出 GroundingPI，一个 4B 参数、以视觉基元构建的模型，通过点、框和共享坐标词汇表统一多种感知任务。分阶段训练配方在 34 个基准上取得当前最优的 grounding 性能。
-- **向物理智能迁移。** 自动驾驶与机器人操作评测展示了强大的同分布与分布外迁移能力，以及更高的动作数据效率。
-- **对感知预训练与具身模型设计的启示。** 我们分析了预训练规模和数据配比对 grounding 及下游迁移的影响，重点讨论稠密 grounding 与 OCR 的作用，并探讨其作为 System-1 基础、与高层推理规划互补的意义。
+- **A strong grounding foundation model.** We introduce GroundingPI, a 4B model built on visual primitives, with a staged training recipe and state-of-the-art grounding performance.
+- **Transfer toward physical intelligence.** Autonomous driving and robotic manipulation evaluations demonstrate the value of this perceptual foundation, including strong ID and OOD performance and improved action-data efficiency.
+- **Insights into perceptual pretraining and future embodied paradigms.** We analyze how pretraining scale and data composition shape grounding and transfer, and discuss implications for System-1 foundation-model design and its complementary role in future embodied systems.
 
 <a id="demo"></a>
 
@@ -219,7 +219,7 @@ Given reference boxes <|box_start|><100><200><500><650><|box_end|> indicating on
 
 ## ⚙️ 方法与推理基础设施
 
-GroundingPI 由 **MoonViT-V2 / Kimi-K3 视觉主干**、**2 × 2 空间聚合投影层**和 **Qwen3-4B-Instruct-2507** 语言主干组成，以自回归方式生成语义标签、协议标记和 1,000 个坐标词元。
+GroundingPI combines a MoonViT-V2 (Kimi K3) visual encoder, a learnable multimodal projector, and a Qwen3-4B language backbone.
 
 <p align="center"><img src="https://huggingface.co/GroundingPI/GroundingPI/resolve/afeca16451e4ad4aec9ebbe91fc3f63f8bfa5c49/assets/fig2-architecture.png" alt="GroundingPI architecture" width="100%" /></p>
 
