@@ -1,4 +1,4 @@
-<h1 align="center"><img src="docs/assets/readme-title.svg" width="211" height="40" alt="GroundingPI" /></h1>
+<h1 align="center"><img src="../docs/assets/readme-title.svg" width="211" height="40" alt="GroundingPI" /></h1>
 
 <p align="center">English | <a href="README.zh-CN.md">简体中文</a></p>
 
@@ -27,9 +27,7 @@
 
 <p align="center"><a href="#demo">Demo Video</a> · <a href="#quick-start">Quick Start</a> · <a href="#documentation">Documentation</a> · <a href="#citation">Citation</a></p>
 
-> **GroundingPI** is a grounding foundation model that turns images and language into precise boxes and points, connecting visual grounding with physical intelligence.
-
-<p align="center"><img src="docs/assets/teaser.png" alt="GroundingPI visual grounding overview" width="100%" /></p>
+<p align="center"><img src="../docs/assets/teaser.png" alt="GroundingPI visual grounding overview" width="100%" /></p>
 
 <a id="news"></a>
 
@@ -57,7 +55,7 @@
 
 ## 🎬 Demo
 
-<p align="center"><a href="https://huggingface.co/GroundingPI/GroundingPI/resolve/aca9bde34a146cf0510e7f8732d4766169105194/assets/demo.mp4"><img src="docs/assets/demo-poster.jpg" alt="Play the GroundingPI demo" width="100%" /></a></p>
+<p align="center"><a href="https://huggingface.co/GroundingPI/GroundingPI/resolve/aca9bde34a146cf0510e7f8732d4766169105194/assets/demo.mp4"><img src="../docs/assets/demo-poster.jpg" alt="Play the GroundingPI demo" width="100%" /></a></p>
 
 [▶ Watch the demo](https://huggingface.co/GroundingPI/GroundingPI/resolve/aca9bde34a146cf0510e7f8732d4766169105194/assets/demo.mp4)
 
@@ -87,7 +85,7 @@ Already have a source checkout? Start with `cd GroundingPI`. Run subsequent comm
 
 `requirements.txt` installs the lightweight HTTP client, visualization tools, and setup dependencies. Serving, training, and evaluation each use their own environment; `pip install -r requirements.txt` alone does not install the model runtime. The client does not load weights and requires no Torch installation.
 
-**Tested accelerators:** NVIDIA **B300, B200, H200, H800**, and **PPU**. Use the matching runtime for each accelerator. See [Environment Setup](environments/README.md) for installation details.
+**Tested accelerators:** NVIDIA **B300, B200, H200, H800**, and **PPU**. Use the matching runtime for each accelerator. See [Environment Setup](../environments/README.md) for installation details.
 
 <a id="deployment-options"></a>
 
@@ -95,8 +93,8 @@ Already have a source checkout? Start with `cd GroundingPI`. Run subsequent comm
 
 | Model | Backend | Use case | Guide |
 |:---|:---|:---|:---|
-| GroundingPI | **vLLM + Transformers backend** | Local API serving, grounding tools, and dataset annotation | [GPU / PPU deployment](docs/VLLM.md) |
-| GroundingPI | Native Transformers service | Reference execution in the training environment | [Native service](docs/INFERENCE.md#native-service) |
+| GroundingPI | **vLLM + Transformers backend** | Local API serving, grounding tools, and dataset annotation | [GPU / PPU deployment](../docs/VLLM.md) |
+| GroundingPI | Native Transformers service | Reference execution in the training environment | [Native service](../docs/INFERENCE.md#native-service) |
 
 The vLLM launcher is the default service. Use the repository adapter and bundled Transformers fork with a compatible accelerator runtime.
 
@@ -124,7 +122,7 @@ For **PPU**, replace the setup command with `python3 run.py setup serve --platfo
 |:---|:---|:---|
 | GroundingPI | `http://127.0.0.1:8000/v1` | `groundingpi` |
 
-Download the complete model package. The vLLM adapter uses a separate overlay and reuses the original weight shards; use a new overlay output directory when switching checkpoints, as described in the [Inference Guide](docs/INFERENCE.md).
+Download the complete model package. The vLLM adapter uses a separate overlay and reuses the original weight shards; use a new overlay output directory when switching checkpoints, as described in the [Inference Guide](../docs/INFERENCE.md).
 
 <a id="run-a-prediction"></a>
 
@@ -174,7 +172,7 @@ python3 examples/predict.py \
 
 </details>
 
-See [Examples](examples/README.md) and the [client implementation](grounding_pi/client.py) for more usage details.
+See [Examples](../examples/README.md) and the [client implementation](../grounding_pi/client.py) for more usage details.
 
 <a id="vllm-deployment"></a>
 
@@ -205,13 +203,13 @@ curl --fail http://127.0.0.1:8000/v1/models
 
 The endpoint is **`http://127.0.0.1:8000/v1`**, with model ID **`groundingpi`**. Defaults are **BF16, eager execution, TP=1, one active sequence, 16,384 context tokens, and 0.7 accelerator-memory utilization**. Each request accepts one image; video is disabled. The adapter reuses the checkpoint's weights through a separate serving overlay.
 
-For custom `/chat/completions` requests, set **`skip_special_tokens: false`** and **`spaces_between_special_tokens: false`** to preserve GAM's adjacent coordinate tokens. Use **GAM** evaluation mode. See the [vLLM Deployment Guide](docs/VLLM.md) for a complete single-image API example, configuration overrides, and runtime checks.
+For custom `/chat/completions` requests, set **`skip_special_tokens: false`** and **`spaces_between_special_tokens: false`** to preserve GAM's adjacent coordinate tokens. Use **GAM** evaluation mode. See the [vLLM Deployment Guide](../docs/VLLM.md) for a complete single-image API example, configuration overrides, and runtime checks.
 
 <a id="batch-annotation"></a>
 
 ## 🗂️ Batch Annotation
 
-Use the [JSONL batch guide](docs/BATCH_INFERENCE.md) to annotate image collections with per-image grounding prompts. The [batch example](examples/batch_predict.py) saves raw responses, parsed coordinates, completion status, and usage; successful items can be skipped when resuming the same inputs and request configuration.
+Use the [JSONL batch guide](../docs/BATCH_INFERENCE.md) to annotate image collections with per-image grounding prompts. The [batch example](../examples/batch_predict.py) saves raw responses, parsed coordinates, completion status, and usage; successful items can be skipped when resuming the same inputs and request configuration.
 
 With a service running and your input manifest prepared:
 
@@ -270,13 +268,13 @@ GroundingPI combines a **MoonViT-V2 / Kimi-K3 vision backbone**, a **2 × 2 spat
 
 The default service uses **vLLM**, **BF16**, one image per request, a **16,384-token context limit**, and tensor parallel size **1**. The custom adapter preserves the model's native spatial-token interface while vLLM manages execution and KV caching.
 
-The supplied launcher uses **eager execution**; **CUDA Graph is disabled** in this recipe. A native Transformers reference service is also available. See [Inference](docs/INFERENCE.md) for custom configurations and reference-backend usage.
+The supplied launcher uses **eager execution**; **CUDA Graph is disabled** in this recipe. A native Transformers reference service is also available. See [Inference](../docs/INFERENCE.md) for custom configurations and reference-backend usage.
 
 <a id="evaluation"></a>
 
 ## 📈 Evaluation
 
-The GroundingPI evaluation suite covers the **34 benchmarks** reported in the paper. The [Evaluation Guide](eval/README.md) provides the data link, path setup, the exact 34-task selection, input validation, and full-suite execution.
+The GroundingPI evaluation suite covers the **34 benchmarks** reported in the paper. The [Evaluation Guide](../eval/README.md) provides the data link, path setup, the exact 34-task selection, input validation, and full-suite execution.
 
 The shared evaluator supports **7 modes**:
 
@@ -297,13 +295,13 @@ python3 run.py setup eval
 python3 run.py eval --config configs/eval/gam.yaml
 ```
 
-The shipped recipes are **8-sample smoke tests** for selected tasks. For the complete 34-benchmark suite, follow the [full evaluation walkthrough](eval/README.md#full-suite): it selects the paper's task list, uses `limit: null`, and writes results under a fresh `run_id`. Evaluation connects to an existing service and does not start or switch its decoder.
+The shipped recipes are **8-sample smoke tests** for selected tasks. For the complete 34-benchmark suite, follow the [full evaluation walkthrough](../eval/README.md#full-suite): it selects the paper's task list, uses `limit: null`, and writes results under a fresh `run_id`. Evaluation connects to an existing service and does not start or switch its decoder.
 
 <a id="training"></a>
 
 ## 🏋️ Training
 
-Training runs in its own environment. Prepare the complete model files, tokenizer, validated input caches, and manifests before launching. The supplied training environment targets the matching **PPU vendor image**. See [Environment Setup](environments/README.md) for the matching runtime and dependencies.
+Training runs in its own environment. Prepare the complete model files, tokenizer, validated input caches, and manifests before launching. The supplied training environment targets the matching **PPU vendor image**. See [Environment Setup](../environments/README.md) for the matching runtime and dependencies.
 
 <a id="configure-supervised-fine-tuning"></a>
 
@@ -311,8 +309,8 @@ Training runs in its own environment. Prepare the complete model files, tokenize
 
 | Configuration | What to set |
 |:---|:---|
-| [`configs/train/vlm.yaml`](configs/train/vlm.yaml) | Model and tokenizer-manifest paths, prepared input caches, learning rates, batch size, sequence length, and output directory |
-| [`configs/release/vlm_train.yaml`](configs/release/vlm_train.yaml) | Native configuration path, environment, and distributed launch settings |
+| [`configs/train/vlm.yaml`](../configs/train/vlm.yaml) | Model and tokenizer-manifest paths, prepared input caches, learning rates, batch size, sequence length, and output directory |
+| [`configs/release/vlm_train.yaml`](../configs/release/vlm_train.yaml) | Native configuration path, environment, and distributed launch settings |
 
 The native recipe supports separate learning rates for the language model, vision encoder, and projector. Set their freeze flags to select which components to train. Keep `runtime.expected_nodes`, `expected_gpus_per_node`, and `expected_world_size` consistent with the launch topology. The effective global batch size is the per-device batch size multiplied by world size and gradient accumulation steps.
 
@@ -325,7 +323,7 @@ python3 run.py setup train
 python3 run.py train --config configs/release/vlm_train.yaml
 ```
 
-The default recipe uses BF16 and writes checkpoints to `outputs/vlm_train/`. Input caches must match the model tokenizer and carry the required manifests. See [Data Preparation](docs/DATA_PREPARATION.md); the repository does not provide a generic JSONL-to-training-cache converter.
+The default recipe uses BF16 and writes checkpoints to `outputs/vlm_train/`. Input caches must match the model tokenizer and carry the required manifests. See [Data Preparation](../docs/DATA_PREPARATION.md); the repository does not provide a generic JSONL-to-training-cache converter.
 
 <a id="resume-training"></a>
 
@@ -333,20 +331,20 @@ The default recipe uses BF16 and writes checkpoints to `outputs/vlm_train/`. Inp
 
 Point `checkpoint.resume_from_checkpoint` in the launch YAML, or `training.resume_from_checkpoint` in the native YAML, to a complete training checkpoint. Configure it in one place and rerun the same launch command. A checkpoint with optimizer, scheduler, and training state is required to continue an interrupted run.
 
-See [Training](docs/TRAINING.md) for the detailed configuration and checkpoint workflow.
+See [Training](../docs/TRAINING.md) for the detailed configuration and checkpoint workflow.
 
 <a id="physical-intelligence"></a>
 
 ## 🤖 Physical Intelligence
 
-The [`vla/`](vla/README.md) directory contains companion backbone-comparison workflows built on StarVLA and OpenWAM, with separate policy-training and evaluation configurations:
+The [`vla/`](../vla/README.md) directory contains companion backbone-comparison workflows built on StarVLA and OpenWAM, with separate policy-training and evaluation configurations:
 
 | Integration | Entry point |
 |:---|:---|
-| Action-model backbone comparison | [starVLA integration](vla/starvla/README.md) |
-| Action-model backbone comparison | [OpenWAM integration](vla/openwam/README.md) |
+| Action-model backbone comparison | [starVLA integration](../vla/starvla/README.md) |
+| Action-model backbone comparison | [OpenWAM integration](../vla/openwam/README.md) |
 
-The Hugging Face release is a grounding vision-language model. The supplied comparison recipes use the backbones listed in the [VLA Guide](vla/README.md) and require their own environments and policy checkpoints; they do not provide a direct action-policy adapter for the released GroundingPI checkpoint.
+The Hugging Face release is a grounding vision-language model. The supplied comparison recipes use the backbones listed in the [VLA Guide](../vla/README.md) and require their own environments and policy checkpoints; they do not provide a direct action-policy adapter for the released GroundingPI checkpoint.
 
 <p align="center"><img src="https://huggingface.co/GroundingPI/GroundingPI/resolve/afeca16451e4ad4aec9ebbe91fc3f63f8bfa5c49/assets/fig6-physical-intelligence.png" alt="GroundingPI physical intelligence results" width="100%" /></p>
 
@@ -366,15 +364,15 @@ Full benchmark definitions, comparisons, and downstream experiments are in the [
 
 | Guide | Contents |
 |:---|:---|
-| [Environment Setup](environments/README.md) | Workflow environments and platform prerequisites |
-| [Inference](docs/INFERENCE.md) | Serving, model preparation, configuration, and reference backend |
-| [vLLM Deployment](docs/VLLM.md) | GPU / PPU setup, container starting point, and image API requests |
-| [Batch Annotation](docs/BATCH_INFERENCE.md) | Resumable JSONL predictions for image collections |
-| [Examples](examples/README.md) | Image prediction, JSON output, and visualization |
-| [Evaluation](eval/README.md) | Dataset setup, paper benchmark suite, execution, and results |
-| [Training](docs/TRAINING.md) | Training recipes, distributed settings, and checkpoints |
-| [Data Preparation](docs/DATA_PREPARATION.md) | Input formats and local preparation requirements |
-| [Third-party Sources](third_party/README.md) | Bundled frameworks and provenance |
+| [Environment Setup](../environments/README.md) | Workflow environments and platform prerequisites |
+| [Inference](../docs/INFERENCE.md) | Serving, model preparation, configuration, and reference backend |
+| [vLLM Deployment](../docs/VLLM.md) | GPU / PPU setup, container starting point, and image API requests |
+| [Batch Annotation](../docs/BATCH_INFERENCE.md) | Resumable JSONL predictions for image collections |
+| [Examples](../examples/README.md) | Image prediction, JSON output, and visualization |
+| [Evaluation](../eval/README.md) | Dataset setup, paper benchmark suite, execution, and results |
+| [Training](../docs/TRAINING.md) | Training recipes, distributed settings, and checkpoints |
+| [Data Preparation](../docs/DATA_PREPARATION.md) | Input formats and local preparation requirements |
+| [Third-party Sources](../third_party/README.md) | Bundled frameworks and provenance |
 
 ```text
 GroundingPI/
@@ -398,9 +396,9 @@ Use `python3 run.py --help` to inspect the command-line interface. Full model wo
 
 Original project contributions are available under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0), with no additional restrictions imposed by this project. This grant covers only rights held by the contributing authors.
 
-Third-party material retains its applicable licenses, including the [Kimi K3 License](models/vlm/LICENSE) for Kimi-derived material and applicable derivative works. These upstream conditions remain in force. See [Third-party Notices](THIRD_PARTY_NOTICES.md) for component attribution and the [released model's license scope](https://huggingface.co/GroundingPI/GroundingPI/blob/main/LICENSE) for the model package.
+Third-party material retains its applicable licenses, including the [Kimi K3 License](../models/vlm/LICENSE) for Kimi-derived material and applicable derivative works. These upstream conditions remain in force. See [Third-party Notices](../THIRD_PARTY_NOTICES.md) for component attribution and the [released model's license scope](https://huggingface.co/GroundingPI/GroundingPI/blob/main/LICENSE) for the model package.
 
-The physical-intelligence integrations retain the terms in [`vla/LICENSE`](vla/LICENSE) and their [third-party notices](vla/THIRD_PARTY_NOTICES.md).
+The physical-intelligence integrations retain the terms in [`vla/LICENSE`](../vla/LICENSE) and their [third-party notices](../vla/THIRD_PARTY_NOTICES.md).
 
 <a id="citation"></a>
 
