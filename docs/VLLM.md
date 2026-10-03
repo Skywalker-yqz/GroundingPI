@@ -99,3 +99,31 @@ To use a different port or checkpoint, edit the `args` list in a copy of the mat
 BF16, eager execution, the Transformers backend, and the one-image input limit are fixed by the provided launcher. It does not expose a CUDA Graph switch. Point evaluation to the matching API URL and model ID; use the [34-benchmark Evaluation Guide](../eval/README.md) for the full suite.
 
 See the [vLLM Transformers-backend documentation](https://docs.vllm.ai/en/v0.18.0/models/supported_models/#transformers) and [OpenAI-compatible server reference](https://docs.vllm.ai/en/v0.18.0/serving/openai_compatible_server/) for the underlying engine interfaces. The project-specific dependency and checkpoint checks above still apply.
+
+## 🗂️ Batch annotation
+
+For image collections, use the resumable [JSONL batch example and guide](BATCH_INFERENCE.md). The client supports the OpenAI-compatible endpoint and preserves GAM coordinate tokens.
+
+## 🐳 NVIDIA container starting point
+
+If you do not already have a vLLM runtime, the [official vLLM container](https://docs.vllm.ai/en/v0.18.0/deployment/docker/) provides a starting point. This example uses a Linux x86_64 host with Docker, NVIDIA Container Toolkit, and a driver compatible with the image. It is a setup recipe, not an additional accelerator-validation result.
+
+From your cloned repository on the host:
+
+```bash
+docker run --rm -it --gpus 'device=0' \
+  --network host --shm-size 8g \
+  -v "$PWD":/workspace/GroundingPI -w /workspace/GroundingPI \
+  --entrypoint bash vllm/vllm-openai:v0.18.0
+```
+
+Inside the container, prepare a fresh serving environment:
+
+```bash
+python3 -m pip install -r requirements.txt huggingface_hub
+hf download GroundingPI/GroundingPI --local-dir weights/vlm
+python3 run.py setup serve --platform gpu
+python3 run.py serve --config configs/release/vlm_vllm_gpu.yaml
+```
+
+The mounted checkout retains weights, environment files, and outputs. On restart with the same image and mount path, skip installation and run the serving command. The default API binds to loopback; Linux host networking lets host-side clients reach it at the URL above. PPU uses its vendor runtime instead of this NVIDIA image. Keep the model adapter and bundled Transformers fork; a stock `vllm serve` invocation alone does not install them.

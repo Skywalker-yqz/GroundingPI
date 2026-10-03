@@ -5,11 +5,24 @@
 <p align="center"><strong>A Grounding Foundation Model towards Physical Intelligence with Visual Primitives</strong></p>
 
 <p align="center">
-  [<a href="https://arxiv.org/abs/2609.39601">📘 Paper</a>]
-  [<a href="https://huggingface.co/GroundingPI/GroundingPI">🤗 HF Model</a>]
-  [<a href="https://huggingface.co/spaces/GroundingPI/GroundingPI">🤗 HF Demo</a>]
-  [<a href="https://groundingpi.github.io/">🌐 Project Page</a>]
-  [<a href="https://github.com/groundingpi/GroundingPI">💻 GitHub</a>]
+  <a href="#highlights"><img src="https://img.shields.io/badge/%F0%9F%8E%AF%20Visual%20Grounding-7050ad?style=for-the-badge" alt="🎯 Visual Grounding" /></a>
+  <a href="#highlights"><img src="https://img.shields.io/badge/%F0%9F%A7%A9%20Visual%20Primitives-367ab5?style=for-the-badge" alt="🧩 Visual Primitives" /></a>
+  <a href="#highlights"><img src="https://img.shields.io/badge/%F0%9F%A4%96%20Physical%20Intelligence-548c38?style=for-the-badge" alt="🤖 Physical Intelligence" /></a>
+  <a href="#highlights"><img src="https://img.shields.io/badge/%F0%9F%A4%97%204B%20Model-cb8625?style=for-the-badge" alt="🤗 4B Model" /></a>
+</p>
+
+<p align="center">
+  <a href="https://arxiv.org/abs/2609.39601"><img src="https://img.shields.io/badge/%F0%9F%93%98%20Paper-b53f4c?style=flat-square" alt="📘 Paper" /></a>
+  <a href="https://huggingface.co/GroundingPI/GroundingPI"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HF%20Model-cb8625?style=flat-square" alt="🤗 HF Model" /></a>
+  <a href="https://huggingface.co/spaces/GroundingPI/GroundingPI"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20HF%20Demo-cb8625?style=flat-square" alt="🤗 HF Demo" /></a>
+  <a href="https://groundingpi.github.io/"><img src="https://img.shields.io/badge/%F0%9F%8C%90%20Project%20Page-367ab5?style=flat-square" alt="🌐 Project Page" /></a>
+  <a href="https://github.com/groundingpi/GroundingPI"><img src="https://img.shields.io/badge/%F0%9F%92%BB%20GitHub-30363d?style=flat-square" alt="💻 GitHub" /></a>
+</p>
+
+<p align="center">
+  <a href="#vllm-deployment"><img src="https://img.shields.io/badge/vLLM%20%C2%B7%20Transformers%20backend-548c38?style=flat-square" alt="vLLM · Transformers backend" /></a>
+  <a href="#deployment-options"><img src="https://img.shields.io/badge/OpenAI--compatible%20API-367ab5?style=flat-square" alt="OpenAI-compatible API" /></a>
+  <a href="#batch-annotation"><img src="https://img.shields.io/badge/Batch%20annotation%20%C2%B7%20JSONL-cb8625?style=flat-square" alt="Batch annotation · JSONL" /></a>
 </p>
 
 <p align="center"><a href="#demo">Demo Video</a> · <a href="#quick-start">Quick Start</a> · <a href="#documentation">Documentation</a> · <a href="#citation">Citation</a></p>
@@ -22,7 +35,7 @@
 
 ## 📰 News
 
-- **2026-10-03:** Released the source code, inference guides, and full-suite evaluation workflows.
+- **2026-10-03:** Released the source code, deployment and batch-annotation guides, and full-suite evaluation workflows.
 - **2026-10-01:** We released the [GroundingPI model weights](https://huggingface.co/GroundingPI/GroundingPI) on Hugging Face.
 - **2026-09-30:** The [GroundingPI paper](https://arxiv.org/abs/2609.39601) is available on arXiv.
 
@@ -30,7 +43,7 @@
 
 ## 🧭 Contents
 
-[Highlights](#highlights) · [Demo](#demo) · [Models](#models) · [Installation](#installation) · [Quick Start](#quick-start) · [vLLM Deployment](#vllm-deployment) · [Tasks and Output Format](#tasks-and-output-format) · [Method and Inference Infrastructure](#method-and-inference-infrastructure) · [Evaluation](#evaluation) · [Training](#training) · [Physical Intelligence](#physical-intelligence) · [Results](#results) · [Documentation](#documentation) · [License](#license) · [Citation](#citation) · [Acknowledgement](#acknowledgement)
+[Highlights](#highlights) · [Demo](#demo) · [Models](#models) · [Installation](#installation) · [Deployment Options](#deployment-options) · [Quick Start](#quick-start) · [vLLM Deployment](#vllm-deployment) · [Batch Annotation](#batch-annotation) · [Tasks and Output Format](#tasks-and-output-format) · [Method and Inference Infrastructure](#method-and-inference-infrastructure) · [Evaluation](#evaluation) · [Training](#training) · [Physical Intelligence](#physical-intelligence) · [Results](#results) · [Documentation](#documentation) · [License](#license) · [Citation](#citation) · [Acknowledgement](#acknowledgement)
 
 <a id="highlights"></a>
 
@@ -44,7 +57,7 @@
 
 ## 🎬 Demo
 
-<p align="center"><a href="https://huggingface.co/GroundingPI/GroundingPI/resolve/aca9bde34a146cf0510e7f8732d4766169105194/assets/demo.mp4"><img src="https://huggingface.co/GroundingPI/GroundingPI/resolve/afeca16451e4ad4aec9ebbe91fc3f63f8bfa5c49/assets/demo-poster.jpg" alt="Play the GroundingPI demo" width="100%" /></a></p>
+<p align="center"><a href="https://huggingface.co/GroundingPI/GroundingPI/resolve/aca9bde34a146cf0510e7f8732d4766169105194/assets/demo.mp4"><img src="docs/assets/demo-poster.jpg" alt="Play the GroundingPI demo" width="100%" /></a></p>
 
 [▶ Watch the demo](https://huggingface.co/GroundingPI/GroundingPI/resolve/aca9bde34a146cf0510e7f8732d4766169105194/assets/demo.mp4)
 
@@ -75,6 +88,19 @@ Already have a source checkout? Start with `cd GroundingPI`. Run subsequent comm
 `requirements.txt` installs the lightweight HTTP client, visualization tools, and setup dependencies. Serving, training, and evaluation each use their own environment; `pip install -r requirements.txt` alone does not install the model runtime. The client does not load weights and requires no Torch installation.
 
 **Tested accelerators:** NVIDIA **B300, B200, H200, H800**, and **PPU**. Use the matching runtime for each accelerator. See [Environment Setup](environments/README.md) for installation details.
+
+<a id="deployment-options"></a>
+
+## 🧩 Deployment Options
+
+| Model | Backend | Use case | Guide |
+|:---|:---|:---|:---|
+| GroundingPI | **vLLM + Transformers backend** | Local API serving, grounding tools, and dataset annotation | [GPU / PPU deployment](docs/VLLM.md) |
+| GroundingPI | Native Transformers service | Reference execution in the training environment | [Native service](docs/INFERENCE.md#native-service) |
+
+The vLLM launcher is the default service. Use the repository adapter and bundled Transformers fork with a compatible accelerator runtime.
+
+All routes expose an **OpenAI-compatible image + text API** and produce structured visual grounding. Prompts cover referring expressions, object localization, text-region grounding, document layout, and point localization. See [Tasks and Output Format](#tasks-and-output-format) for the prompt and coordinate contract. For processing an image collection, start with [Batch Annotation](#batch-annotation).
 
 <a id="quick-start"></a>
 
@@ -180,6 +206,22 @@ curl --fail http://127.0.0.1:8000/v1/models
 The endpoint is **`http://127.0.0.1:8000/v1`**, with model ID **`groundingpi`**. Defaults are **BF16, eager execution, TP=1, one active sequence, 16,384 context tokens, and 0.7 accelerator-memory utilization**. Each request accepts one image; video is disabled. The adapter reuses the checkpoint's weights through a separate serving overlay.
 
 For custom `/chat/completions` requests, set **`skip_special_tokens: false`** and **`spaces_between_special_tokens: false`** to preserve GAM's adjacent coordinate tokens. Use **GAM** evaluation mode. See the [vLLM Deployment Guide](docs/VLLM.md) for a complete single-image API example, configuration overrides, and runtime checks.
+
+<a id="batch-annotation"></a>
+
+## 🗂️ Batch Annotation
+
+Use the [JSONL batch guide](docs/BATCH_INFERENCE.md) to annotate image collections with per-image grounding prompts. The [batch example](examples/batch_predict.py) saves raw responses, parsed coordinates, completion status, and usage; successful items can be skipped when resuming the same inputs and request configuration.
+
+With a service running and your input manifest prepared:
+
+```bash
+python3 examples/batch_predict.py \
+  --input requests.jsonl --output predictions.jsonl \
+  --base-url http://127.0.0.1:8000/v1 --model groundingpi
+```
+
+The supplied serving profiles use **one active sequence**. Batch processing here means sequential image requests with durable output. For multiple accelerators, split the manifest across independent service replicas and use a separate output file per worker. Inspect truncated or invalid results before using predictions as annotations.
 
 <a id="tasks-and-output-format"></a>
 
@@ -326,6 +368,8 @@ Full benchmark definitions, comparisons, and downstream experiments are in the [
 |:---|:---|
 | [Environment Setup](environments/README.md) | Workflow environments and platform prerequisites |
 | [Inference](docs/INFERENCE.md) | Serving, model preparation, configuration, and reference backend |
+| [vLLM Deployment](docs/VLLM.md) | GPU / PPU setup, container starting point, and image API requests |
+| [Batch Annotation](docs/BATCH_INFERENCE.md) | Resumable JSONL predictions for image collections |
 | [Examples](examples/README.md) | Image prediction, JSON output, and visualization |
 | [Evaluation](eval/README.md) | Dataset setup, paper benchmark suite, execution, and results |
 | [Training](docs/TRAINING.md) | Training recipes, distributed settings, and checkpoints |
