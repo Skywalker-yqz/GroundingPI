@@ -33,6 +33,7 @@
 
 ## 📰 News
 
+- **2026-10-04:** Released the [project webpage](https://groundingpi.github.io/).
 - **2026-10-03:** Released the source code, deployment and batch-annotation guides, and full-suite evaluation workflows.
 - **2026-10-01:** We released the [GroundingPI model weights](https://huggingface.co/GroundingPI/GroundingPI) on Hugging Face.
 - **2026-09-30:** The [GroundingPI paper](https://arxiv.org/abs/2609.39601) is available on arXiv.
