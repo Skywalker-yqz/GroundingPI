@@ -20,6 +20,7 @@
 
 ## 📰 新闻
 
+- **2026-10-04：** 发布[项目网页](https://groundingpi.github.io/)。
 - **2026-10-03：** 发布源代码、推理指南和完整评测流程。
 - **2026-10-01：** 在 Hugging Face 上发布 [GroundingPI 模型权重](https://huggingface.co/GroundingPI/GroundingPI)。
 - **2026-09-30：** [GroundingPI 论文](https://arxiv.org/abs/2609.39601)在 arXiv 上可查阅。
