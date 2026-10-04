@@ -1,8 +1,8 @@
-<h1 align="center"><img src="docs/assets/readme-title.svg" width="211" height="40" alt="GroundingPI" /></h1>
+<h1 align="center"><img src="docs/assets/readme-title.svg" width="420" alt="GroundingPI" /></h1>
 
 <p align="center"><a href="README.md">English</a> | 简体中文</p>
 
-<p align="center"><strong>以视觉基元迈向物理智能的 grounding 基础模型</strong></p>
+<h3 align="center">以视觉基元迈向物理智能的 grounding 基础模型</h3>
 
 <p align="center">
   [<a href="https://arxiv.org/abs/2609.39601">📘 论文</a>]
