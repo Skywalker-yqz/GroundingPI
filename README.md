@@ -1,8 +1,8 @@
-<h1 align="center"><img src="docs/assets/readme-title.svg" width="211" height="40" alt="GroundingPI" /></h1>
+<h1 align="center"><img src="docs/assets/readme-title.svg" width="420" alt="GroundingPI" /></h1>
 
 <p align="center">English | <a href="README.zh-CN.md">简体中文</a></p>
 
-<p align="center"><strong>A Grounding Foundation Model towards Physical Intelligence with Visual Primitives</strong></p>
+<h3 align="center">A Grounding Foundation Model towards Physical Intelligence with Visual Primitives</h3>
 
 <p align="center">
   <a href="#highlights"><img src="https://img.shields.io/badge/%F0%9F%8E%AF%20Visual%20Grounding-7050ad?style=for-the-badge" alt="🎯 Visual Grounding" /></a>
